@@ -1,0 +1,772 @@
+# hello.txt
+# Slotted-branch only aggregation.
+# This file intentionally excludes the old smooth-air-gap baseline branch.
+# Included here: 5-region PM-only / slotting branch core.
+# Updated to include:
+# - pm_only_coupled_max_harmonic = 45
+# - separate region-III slot opening angle
+# - region-IV/V slot-tooth alternating permeability
+# config.py
+from __future__ import annotations
+from dataclasses import dataclass
+import numpy as np
+
+@dataclass(frozen=True)
+class LinearPMModelParams:
+    pole_pairs: int = 4
+    stator_slots: int = 12
+
+    rotor_outer_radius: float = 38.0e-3
+    air_gap_inner_radius: float = 43.0e-3
+    air_gap_outer_radius: float = 47.0e-3
+    slot_opening_radius: float = 49.8e-3
+    region_iv_boundary_radius: float = 53.5e-3
+    stator_outer_radius: float = 64.5e-3
+    stack_length: float = 30.0e-3
+
+    magnet_arc_ratio: float = 0.80
+    magnet_tangential_segments: int = 1
+    magnet_radial_layers: int = 1
+    initial_rotor_angle_mech: float = 0.0
+    Br_60C: float = 1.247
+    mu_rec: float = 1.039
+    mu_0: float = 4.0 * np.pi * 1.0e-7
+
+    core_mu_r_linear: float = 1000.0
+
+    max_odd_harmonic: int = 45
+    max_current_harmonic: int = 90
+    sample_count: int = 4096
+    pm_only_coupled_max_harmonic: int = 45
+    pm_only_cogging_point_count: int = 19
+    region_iii_subsections: int = 1
+    region_iv_subsections: int = 6
+    region_v_subsections: int = 6
+    max_slot_opening_length: float = 10.0e-3
+    slot_region_mu_r_linear: float = 1.0
+
+    phase_current_peak: float = 50.0
+    turns_per_phase: int = 100
+    turns_per_coil_in_slot: int = 14
+    winding_factor_fundamental: float = 0.95
+    torque_angle_elec: float = 0.0
+    stator_q_axis_offset_elec: float = 0.5 * np.pi
+    mechanical_speed_rpm: float = 1400.0
+    output_dir: str = "outputs/linear_model"
+
+    @property
+    def M0(self) -> float:
+        return self.Br_60C / self.mu_0
+
+    @property
+    def pole_count(self) -> int:
+        return 2 * self.pole_pairs
+
+    @property
+    def magnet_air_gap_arc_mech(self) -> float:
+        return self.pole_pitch_mech - self.magnet_arc_mech
+
+    @property
+    def magnet_mu_r_linear(self) -> float:
+        return self.mu_rec
+
+    @property
+    def pole_pitch_mech(self) -> float:
+        return np.pi / self.pole_pairs
+
+    @property
+    def magnet_arc_mech(self) -> float:
+        return self.magnet_arc_ratio * self.pole_pitch_mech
+
+    @property
+    def magnet_arc_elec(self) -> float:
+        return self.magnet_arc_ratio * np.pi
+
+    @property
+    def mid_gap_radius(self) -> float:
+        return 0.5 * (self.air_gap_inner_radius + self.air_gap_outer_radius)
+
+    @property
+    def odd_electrical_harmonics(self) -> np.ndarray:
+        return np.arange(1, 2 * self.max_odd_harmonic, 2, dtype=int)
+
+    @property
+    def slot_pitch_mech(self) -> float:
+        return 2.0 * np.pi / self.stator_slots
+
+    @property
+    def coil_width_mech(self) -> float:
+        return 0.5 * self.slot_pitch_mech
+
+    @property
+    def slot_opening_angle_mech(self) -> float:
+        return self.max_slot_opening_length / self.slot_opening_radius
+
+    @property
+    def slot_body_angle_mech(self) -> float:
+        return self.coil_width_mech
+
+    @property
+    def slot_area_region_v(self) -> float:
+        return 0.5 * self.coil_width_mech * (
+            self.stator_outer_radius**2 - self.slot_opening_radius**2
+        )
+
+    @property
+    def slot_current_to_surface_factor(self) -> float:
+        return (
+            self.stator_outer_radius**2 - self.slot_opening_radius**2
+        ) / (2.0 * self.air_gap_outer_radius)
+
+    @property
+    def omega_mech_rad_s(self) -> float:
+        return 2.0 * np.pi * self.mechanical_speed_rpm / 60.0
+
+    @property
+    def omega_elec_rad_s(self) -> float:
+        return self.pole_pairs * self.omega_mech_rad_s
+
+    @property
+    def electrical_frequency_hz(self) -> float:
+        return self.omega_elec_rad_s / (2.0 * np.pi)
+
+@dataclass(frozen=True)
+class RegionPermeabilityDescriptor:
+    region_name: str
+    theta_i: np.ndarray
+    beta_sl: float
+    beta_sub: float
+    subsection_mu: np.ndarray
+    subsection_count: int
+
+@dataclass(frozen=True)
+class SubdomainScaffold:
+    region_names: tuple[str, ...]
+    interface_radii: tuple[float, ...]
+    unknowns_per_harmonic: int
+    boundary_condition_count: int
+    missing_equations: tuple[str, ...]
+    notes: tuple[str, ...]
+
+@dataclass(frozen=True)
+class PMOnly5RegionSolution:
+    params: LinearPMModelParams
+    theta_mech: np.ndarray
+    harmonic_orders: np.ndarray
+    eval_radius: float
+    Br_gap: np.ndarray
+    Btheta_gap: np.ndarray
+    rotor_angles_mech: np.ndarray
+    cogging_torque_nm: np.ndarray
+    system_size: int
+    solve_residual: float
+
+@dataclass(frozen=True)
+class CoupledRegionOperators:
+    region_name: str
+    inner_radius: float
+    outer_radius: float
+    mu_c_r: np.ndarray
+    mu_c_r_inv: np.ndarray
+    mu_c_theta: np.ndarray
+    mu_c_theta_inv: np.ndarray
+    V: np.ndarray
+    U: np.ndarray
+    W: np.ndarray
+    W_inv: np.ndarray
+    lambda_values: np.ndarray
+
+
+# excitation.py
+from __future__ import annotations
+import numpy as np
+from config import CurrentLoadingSpectrum, HarmonicSpectrum, LinearPMModelParams
+
+def mechanical_angle_grid(params: LinearPMModelParams) -> np.ndarray:
+    return np.linspace(0.0, 2.0 * np.pi, params.sample_count, endpoint=False)
+
+def exact_radial_magnetization(
+    theta_mech: np.ndarray, params: LinearPMModelParams
+) -> np.ndarray:
+    theta_rotor = theta_mech - params.initial_rotor_angle_mech
+    phi = np.mod(params.pole_pairs * theta_rotor, 2.0 * np.pi)
+    phi_wrapped = (phi + np.pi) % (2.0 * np.pi) - np.pi
+
+    half_arc = 0.5 * params.magnet_arc_elec
+    positive_pole = np.abs(phi_wrapped) <= half_arc
+    negative_pole = np.abs(np.abs(phi_wrapped) - np.pi) <= half_arc
+
+    Mr = np.zeros_like(theta_mech)
+    Mr[positive_pole] = params.M0
+    Mr[negative_pole] = -params.M0
+    return Mr
+
+def complex_fourier_coefficients(
+    theta_mech: np.ndarray,
+    waveform: np.ndarray,
+    mechanical_orders: np.ndarray,
+) -> np.ndarray:
+    coeffs = np.empty(len(mechanical_orders), dtype=complex)
+    for idx, order in enumerate(mechanical_orders):
+        coeffs[idx] = np.mean(waveform * np.exp(-1j * order * theta_mech))
+    return coeffs
+
+
+# permeability.py
+from __future__ import annotations
+import numpy as np
+from config import LinearPMModelParams, RegionPermeabilityDescriptor
+from excitation import exact_radial_magnetization
+
+def signed_nonzero_harmonic_orders(max_harmonic: int) -> np.ndarray:
+    return np.concatenate(
+        (
+            np.arange(-max_harmonic, 0, dtype=int),
+            np.arange(1, max_harmonic + 1, dtype=int),
+        )
+    )
+
+def k_theta_matrix(orders: np.ndarray) -> np.ndarray:
+    return np.diag(orders.astype(complex))
+
+def toeplitz_from_cfs(coefficients: dict[int, complex], orders: np.ndarray) -> np.ndarray:
+    size = len(orders)
+    matrix = np.zeros((size, size), dtype=complex)
+    for row_idx, row_order in enumerate(orders):
+        for col_idx, col_order in enumerate(orders):
+            matrix[row_idx, col_idx] = coefficients.get(int(row_order - col_order), 0.0)
+    return matrix
+
+def inverse_cfs_coefficients(coefficients: dict[int, complex]) -> dict[int, complex]:
+    inverse = {}
+    for order, value in coefficients.items():
+        if np.isclose(value, 0.0):
+            inverse[order] = 0.0
+        else:
+            inverse[order] = 1.0 / value
+    return inverse
+
+def coefficient_dict_from_waveform(
+    theta_mech: np.ndarray,
+    waveform: np.ndarray,
+    max_order: int,
+) -> dict[int, complex]:
+    coeffs: dict[int, complex] = {}
+    for order in range(-max_order, max_order + 1):
+        coeffs[order] = np.mean(waveform * np.exp(-1j * order * theta_mech))
+    return coeffs
+
+def convolution_matrices_from_waveforms(
+    theta_mech: np.ndarray,
+    permeability_waveform: np.ndarray,
+    orders: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    max_diff = int(np.max(np.abs(orders[:, None] - orders[None, :])))
+    mu_coeffs = coefficient_dict_from_waveform(theta_mech, permeability_waveform, max_diff)
+    mu_rec_coeffs = coefficient_dict_from_waveform(
+        theta_mech,
+        1.0 / permeability_waveform,
+        max_diff,
+    )
+    mu_c_r = toeplitz_from_cfs(mu_coeffs, orders)
+    mu_c_theta = toeplitz_from_cfs(mu_rec_coeffs, orders)
+    mu_c_r_inv = np.linalg.inv(mu_c_r)
+    mu_c_theta_inv = np.linalg.inv(mu_c_theta)
+    return mu_c_r, mu_c_r_inv, mu_c_theta, mu_c_theta_inv
+
+def sample_region_i_permeability(
+    theta_mech: np.ndarray,
+    params: LinearPMModelParams,
+) -> np.ndarray:
+    magnet_mask = np.abs(exact_radial_magnetization(theta_mech, params)) > 0.5 * params.M0
+    waveform = np.ones_like(theta_mech, dtype=float)
+    waveform[magnet_mask] = params.magnet_mu_r_linear
+    return waveform
+
+def sample_region_iii_permeability(
+    theta_mech: np.ndarray,
+    params: LinearPMModelParams,
+) -> np.ndarray:
+    theta_mod = np.mod(theta_mech, 2.0 * np.pi)
+    local_angle = (
+        theta_mod - (np.floor(theta_mod / params.slot_pitch_mech) + 0.5) * params.slot_pitch_mech
+    )
+    local_angle = (local_angle + np.pi) % (2.0 * np.pi) - np.pi
+    air_mask = np.abs(local_angle) <= 0.5 * params.slot_opening_angle_mech
+    waveform = np.full_like(theta_mech, params.core_mu_r_linear, dtype=float)
+    waveform[air_mask] = 1.0
+    return waveform
+
+def sample_region_iv_v_permeability(
+    theta_mech: np.ndarray,
+    params: LinearPMModelParams,
+) -> np.ndarray:
+    theta_mod = np.mod(theta_mech, 2.0 * np.pi)
+    local_angle = (
+        theta_mod - (np.floor(theta_mod / params.slot_pitch_mech) + 0.5) * params.slot_pitch_mech
+    )
+    local_angle = (local_angle + np.pi) % (2.0 * np.pi) - np.pi
+    air_mask = np.abs(local_angle) <= 0.5 * params.slot_body_angle_mech
+    waveform = np.full_like(theta_mech, params.core_mu_r_linear, dtype=float)
+    waveform[air_mask] = params.slot_region_mu_r_linear
+    return waveform
+
+def sample_constant_permeability(
+    theta_mech: np.ndarray,
+    relative_mu: float,
+) -> np.ndarray:
+    return np.full_like(theta_mech, relative_mu, dtype=float)
+
+
+# subdomain_matrix.py
+from __future__ import annotations
+import numpy as np
+from config import CoupledRegionOperators, LinearPMModelParams, SubdomainScaffold
+from permeability import (
+    convolution_matrices_from_waveforms,
+    k_theta_matrix,
+    sample_constant_permeability,
+    sample_region_i_permeability,
+    sample_region_iii_permeability,
+    sample_region_iv_v_permeability,
+)
+
+def build_linear_subdomain_scaffold(params: LinearPMModelParams) -> SubdomainScaffold:
+    return SubdomainScaffold(
+        region_names=("I", "II", "III", "IV", "V"),
+        interface_radii=(
+            params.rotor_outer_radius,
+            params.air_gap_inner_radius,
+            params.air_gap_outer_radius,
+            params.slot_opening_radius,
+            params.region_iv_boundary_radius,
+            params.stator_outer_radius,
+        ),
+        unknowns_per_harmonic=10,
+        boundary_condition_count=10,
+        missing_equations=(
+            "Current-carrying 5-region solve still needs the mixed slot/tooth permeability treatment in regions IV/V",
+            "Full paper-accurate matrix form still needs the coupled convolution-matrix implementation instead of the current scalar-mu simplification",
+        ),
+        notes=(
+            "This scaffold maps the 5 regions and interface radii without pretending the full paper matrix is done",
+            "The verified executable path remains the smooth-air-gap baseline solver",
+            "PM CFS source terms from equations (24)-(29) are now available in excitation.py",
+            "Permeability CFS helpers from equations (11)-(15) and H(Az) relations from (35)-(36) are now available",
+            "Region III/IV/V geometry is now parameterized, but still uses explicit assumptions until exact slot-opening angles and subsection profiles are confirmed",
+            "A linear scalar-mu 5-region PM-only solve is now executable for field and cogging-torque preview",
+            "Current-carrying 5-region solve is still deferred because regions IV/V need mixed slot-tooth permeability, not a single scalar mu",
+            "When the missing blocks are filled, this file becomes the matrix core of the paper model",
+        ),
+    )
+
+def region_bounds(params: LinearPMModelParams) -> tuple[tuple[float, float], ...]:
+    return (
+        (params.rotor_outer_radius, params.air_gap_inner_radius),   # I
+        (params.air_gap_inner_radius, params.air_gap_outer_radius), # II
+        (params.air_gap_outer_radius, params.slot_opening_radius),  # III
+        (params.slot_opening_radius, params.region_iv_boundary_radius), # IV
+        (params.region_iv_boundary_radius, params.stator_outer_radius), # V
+    )
+
+def pm_only_region_waveforms(
+    theta_mech: np.ndarray,
+    params: LinearPMModelParams,
+) -> dict[str, np.ndarray]:
+    return {
+        "I": sample_region_i_permeability(theta_mech, params),
+        "II": sample_constant_permeability(theta_mech, 1.0),
+        "III": sample_region_iii_permeability(theta_mech, params),
+        "IV": sample_region_iv_v_permeability(theta_mech, params),
+        "V": sample_region_iv_v_permeability(theta_mech, params),
+    }
+
+def _build_region_operator(
+    region_name: str,
+    inner_radius: float,
+    outer_radius: float,
+    theta_mech: np.ndarray,
+    permeability_waveform: np.ndarray,
+    harmonic_orders: np.ndarray,
+) -> CoupledRegionOperators:
+    mu_c_r, mu_c_r_inv, mu_c_theta, mu_c_theta_inv = convolution_matrices_from_waveforms(
+        theta_mech=theta_mech,
+        permeability_waveform=permeability_waveform,
+        orders=harmonic_orders,
+    )
+    K_theta = k_theta_matrix(harmonic_orders)
+    V = mu_c_theta @ K_theta @ mu_c_r_inv @ K_theta
+    U = mu_c_theta @ K_theta @ mu_c_r_inv
+    eigenvalues, W = np.linalg.eig(V)
+    lambda_values = np.sqrt(eigenvalues.astype(complex))
+    W_inv = np.linalg.inv(W)
+    return CoupledRegionOperators(
+        region_name=region_name,
+        inner_radius=inner_radius,
+        outer_radius=outer_radius,
+        mu_c_r=mu_c_r,
+        mu_c_r_inv=mu_c_r_inv,
+        mu_c_theta=mu_c_theta,
+        mu_c_theta_inv=mu_c_theta_inv,
+        V=V,
+        U=U,
+        W=W,
+        W_inv=W_inv,
+        lambda_values=lambda_values,
+    )
+
+def build_pm_only_coupled_region_operators(
+    theta_mech: np.ndarray,
+    params: LinearPMModelParams,
+    harmonic_orders: np.ndarray,
+) -> dict[str, CoupledRegionOperators]:
+    bounds = region_bounds(params)
+    waveforms = pm_only_region_waveforms(theta_mech, params)
+    region_names = ("I", "II", "III", "IV", "V")
+    operators: dict[str, CoupledRegionOperators] = {}
+    for idx, region_name in enumerate(region_names):
+        inner_radius, outer_radius = bounds[idx]
+        operators[region_name] = _build_region_operator(
+            region_name=region_name,
+            inner_radius=inner_radius,
+            outer_radius=outer_radius,
+            theta_mech=theta_mech,
+            permeability_waveform=waveforms[region_name],
+            harmonic_orders=harmonic_orders,
+        )
+    return operators
+
+def _block_slice(region_index: int, coeff_kind: str, harmonic_count: int) -> slice:
+    offset = 2 * region_index * harmonic_count
+    if coeff_kind == "a":
+        return slice(offset, offset + harmonic_count)
+    return slice(offset + harmonic_count, offset + 2 * harmonic_count)
+
+def _homogeneous_matrices(
+    operator: CoupledRegionOperators,
+    radius: float,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    lambda_values = operator.lambda_values
+    ratio_a = np.power(radius / operator.outer_radius, lambda_values)
+    ratio_b = np.power(radius / operator.inner_radius, -lambda_values)
+    Az_a = operator.W @ np.diag(ratio_a)
+    Az_b = operator.W @ np.diag(ratio_b)
+    dAz_a = operator.W @ np.diag((lambda_values / radius) * ratio_a)
+    dAz_b = operator.W @ np.diag((-lambda_values / radius) * ratio_b)
+    return Az_a, Az_b, dAz_a, dAz_b
+
+def _pm_only_particular_vectors(
+    operator: CoupledRegionOperators,
+    radius: float,
+    M_r: np.ndarray,
+    M_theta: np.ndarray,
+    mu_0: float,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    if operator.region_name != "I":
+        zeros = np.zeros(len(M_r), dtype=complex)
+        return zeros, zeros, zeros
+
+    identity = np.eye(len(M_r), dtype=complex)
+    rhs = 1j * mu_0 * (operator.U @ M_r) + mu_0 * M_theta
+    G_I = np.linalg.solve(operator.V - identity, rhs)
+    Az_part = radius * G_I
+    dAz_part = G_I
+    Htheta_part = -(operator.mu_c_theta_inv @ dAz_part) - mu_0 * (
+        operator.mu_c_theta_inv @ M_theta
+    )
+    return Az_part, dAz_part, Htheta_part
+
+def assemble_coupled_pm_only_system(
+    params: LinearPMModelParams,
+    operators: dict[str, CoupledRegionOperators],
+    harmonic_orders: np.ndarray,
+    M_r: np.ndarray,
+    M_theta: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray]:
+    harmonic_count = len(harmonic_orders)
+    system_size = 10 * harmonic_count
+    matrix = np.zeros((system_size, system_size), dtype=complex)
+    rhs = np.zeros(system_size, dtype=complex)
+    region_names = ("I", "II", "III", "IV", "V")
+    region_index = {name: idx for idx, name in enumerate(region_names)}
+
+    def htheta_basis(
+        operator: CoupledRegionOperators,
+        dAz_a: np.ndarray,
+        dAz_b: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        return (
+            -(operator.mu_c_theta_inv @ dAz_a),
+            -(operator.mu_c_theta_inv @ dAz_b),
+        )
+
+    row = 0
+    region_I = operators["I"]
+    _, _, dAz_a, dAz_b = _homogeneous_matrices(region_I, region_I.inner_radius)
+    H_a, H_b = htheta_basis(region_I, dAz_a, dAz_b)
+    _, _, H_part = _pm_only_particular_vectors(
+        region_I, region_I.inner_radius, M_r, M_theta, params.mu_0
+    )
+    row_slice = slice(row, row + harmonic_count)
+    matrix[row_slice, _block_slice(region_index["I"], "a", harmonic_count)] = H_a
+    matrix[row_slice, _block_slice(region_index["I"], "b", harmonic_count)] = H_b
+    rhs[row_slice] = -H_part
+    row += harmonic_count
+
+    interfaces = (("I", "II"), ("II", "III"), ("III", "IV"), ("IV", "V"))
+    interface_radii = (
+        params.air_gap_inner_radius,
+        params.air_gap_outer_radius,
+        params.slot_opening_radius,
+        params.region_iv_boundary_radius,
+    )
+
+    for radius, (left_name, right_name) in zip(interface_radii, interfaces):
+        left = operators[left_name]
+        right = operators[right_name]
+        left_idx = region_index[left_name]
+        right_idx = region_index[right_name]
+
+        Az_a_l, Az_b_l, dAz_a_l, dAz_b_l = _homogeneous_matrices(left, radius)
+        Az_a_r, Az_b_r, dAz_a_r, dAz_b_r = _homogeneous_matrices(right, radius)
+        H_a_l, H_b_l = htheta_basis(left, dAz_a_l, dAz_b_l)
+        H_a_r, H_b_r = htheta_basis(right, dAz_a_r, dAz_b_r)
+
+        Az_part_l, _, H_part_l = _pm_only_particular_vectors(
+            left, radius, M_r, M_theta, params.mu_0
+        )
+        Az_part_r, _, H_part_r = _pm_only_particular_vectors(
+            right, radius, M_r, M_theta, params.mu_0
+        )
+
+        row_slice = slice(row, row + harmonic_count)
+        matrix[row_slice, _block_slice(left_idx, "a", harmonic_count)] = Az_a_l
+        matrix[row_slice, _block_slice(left_idx, "b", harmonic_count)] = Az_b_l
+        matrix[row_slice, _block_slice(right_idx, "a", harmonic_count)] = -Az_a_r
+        matrix[row_slice, _block_slice(right_idx, "b", harmonic_count)] = -Az_b_r
+        rhs[row_slice] = Az_part_r - Az_part_l
+        row += harmonic_count
+
+        row_slice = slice(row, row + harmonic_count)
+        matrix[row_slice, _block_slice(left_idx, "a", harmonic_count)] = H_a_l
+        matrix[row_slice, _block_slice(left_idx, "b", harmonic_count)] = H_b_l
+        matrix[row_slice, _block_slice(right_idx, "a", harmonic_count)] = -H_a_r
+        matrix[row_slice, _block_slice(right_idx, "b", harmonic_count)] = -H_b_r
+        rhs[row_slice] = H_part_r - H_part_l
+        row += harmonic_count
+
+    region_V = operators["V"]
+    _, _, dAz_a, dAz_b = _homogeneous_matrices(region_V, region_V.outer_radius)
+    H_a, H_b = htheta_basis(region_V, dAz_a, dAz_b)
+    _, _, H_part = _pm_only_particular_vectors(
+        region_V, region_V.outer_radius, M_r, M_theta, params.mu_0
+    )
+    row_slice = slice(row, row + harmonic_count)
+    matrix[row_slice, _block_slice(region_index["V"], "a", harmonic_count)] = H_a
+    matrix[row_slice, _block_slice(region_index["V"], "b", harmonic_count)] = H_b
+    rhs[row_slice] = -H_part
+    return matrix, rhs
+
+def evaluate_coupled_region_solution(
+    operator: CoupledRegionOperators,
+    radius: float,
+    a_coeff: np.ndarray,
+    b_coeff: np.ndarray,
+    M_r: np.ndarray,
+    M_theta: np.ndarray,
+    mu_0: float,
+) -> tuple[np.ndarray, np.ndarray]:
+    Az_a, Az_b, dAz_a, dAz_b = _homogeneous_matrices(operator, radius)
+    Az_part, dAz_part, _ = _pm_only_particular_vectors(
+        operator, radius, M_r, M_theta, mu_0
+    )
+    Az_coeff = Az_a @ a_coeff + Az_b @ b_coeff + Az_part
+    dAz_dr_coeff = dAz_a @ a_coeff + dAz_b @ b_coeff + dAz_part
+    return Az_coeff, dAz_dr_coeff
+
+
+# post_processing.py
+from __future__ import annotations
+import numpy as np
+from config import CurrentLoadingSpectrum, HarmonicSpectrum, LinearPMModelParams
+from excitation import (
+    exact_radial_magnetization,
+    reconstruct_radial_magnetization,
+    slot_current_loading_harmonics,
+    slot_current_loading_waveform,
+)
+
+def average_torque_maxwell(
+    theta_mech: np.ndarray,
+    Br: np.ndarray,
+    Btheta: np.ndarray,
+    radius: float,
+    params: LinearPMModelParams,
+) -> float:
+    if Br.shape != Btheta.shape or Br.shape != theta_mech.shape:
+        raise ValueError("theta_mech, Br, and Btheta must have the same shape")
+
+    shear_stress_mean = float(np.mean(Br * Btheta) / params.mu_0)
+    air_gap_surface = 2.0 * np.pi * radius * params.stack_length
+    return shear_stress_mean * air_gap_surface * radius
+
+
+# solver.py
+from __future__ import annotations
+from dataclasses import replace
+import numpy as np
+from config import (
+    BaselineSolution,
+    CurrentLoadingSpectrum,
+    HarmonicSpectrum,
+    LinearPMModelParams,
+    PMOnly5RegionSolution,
+)
+from excitation import (
+    balanced_phase_currents,
+    complex_fourier_coefficients,
+    dq_currents,
+    exact_radial_magnetization,
+    mechanical_angle_grid,
+    pm_cfs_coefficients,
+    radial_pm_harmonics,
+    reconstruct_radial_magnetization,
+    slot_current_density_waveform,
+    slot_current_loading_harmonics,
+    slot_current_loading_waveform,
+)
+from permeability import k_theta_matrix, signed_nonzero_harmonic_orders
+from post_processing import (
+    average_torque_maxwell,
+    equivalent_pm_flux_linkage,
+    phase_back_emf_constants,
+)
+from subdomain_matrix import (
+    assemble_linear_5region_system,
+    assemble_coupled_pm_only_system,
+    build_linear_subdomain_scaffold,
+    build_pm_only_coupled_region_operators,
+    evaluate_coupled_region_solution,
+    particular_coefficients,
+    region_absolute_mu,
+    region_bounds,
+)
+
+def cogging_period_mech(params: LinearPMModelParams) -> float:
+    return 2.0 * np.pi / np.lcm(params.stator_slots, params.pole_count)
+
+def solve_linear_5region_pm_only(
+    params: LinearPMModelParams,
+    radius: float | None = None,
+    cogging_point_count: int | None = None,
+) -> PMOnly5RegionSolution:
+    eval_radius = params.mid_gap_radius if radius is None else radius
+    harmonic_orders = signed_nonzero_harmonic_orders(params.pm_only_coupled_max_harmonic)
+    harmonic_count = len(harmonic_orders)
+    cogging_point_count = (
+        params.pm_only_cogging_point_count
+        if cogging_point_count is None
+        else cogging_point_count
+    )
+
+    def solve_single(rotated_params: LinearPMModelParams) -> tuple[np.ndarray, np.ndarray, float]:
+        theta = mechanical_angle_grid(rotated_params)
+        operators = build_pm_only_coupled_region_operators(
+            theta_mech=theta,
+            params=rotated_params,
+            harmonic_orders=harmonic_orders,
+        )
+        magnetization = exact_radial_magnetization(theta, rotated_params)
+        M_r = complex_fourier_coefficients(theta, magnetization, harmonic_orders)
+        M_theta = np.zeros_like(M_r)
+        matrix, rhs = assemble_coupled_pm_only_system(
+            params=rotated_params,
+            operators=operators,
+            harmonic_orders=harmonic_orders,
+            M_r=M_r,
+            M_theta=M_theta,
+        )
+        try:
+            solution_vector = np.linalg.solve(matrix, rhs)
+        except np.linalg.LinAlgError:
+            solution_vector, *_ = np.linalg.lstsq(matrix, rhs, rcond=None)
+        residual = np.linalg.norm(matrix @ solution_vector - rhs) / (
+            1.0 + np.linalg.norm(rhs)
+        )
+
+        region_ii_a = solution_vector[2 * harmonic_count : 3 * harmonic_count]
+        region_ii_b = solution_vector[3 * harmonic_count : 4 * harmonic_count]
+        Az_coeff, dAz_dr_coeff = evaluate_coupled_region_solution(
+            operator=operators["II"],
+            radius=eval_radius,
+            a_coeff=region_ii_a,
+            b_coeff=region_ii_b,
+            M_r=M_r,
+            M_theta=M_theta,
+            mu_0=rotated_params.mu_0,
+        )
+        phase = np.exp(1j * np.outer(harmonic_orders, theta))
+        Br_coeff = (-1j / eval_radius) * (harmonic_orders.astype(complex) * Az_coeff)
+        Btheta_coeff = -dAz_dr_coeff
+        Br_gap = np.real(np.sum(Br_coeff[:, None] * phase, axis=0))
+        Btheta_gap = np.real(np.sum(Btheta_coeff[:, None] * phase, axis=0))
+        return Br_gap, Btheta_gap, float(residual)
+
+    theta = mechanical_angle_grid(params)
+    Br_gap, Btheta_gap, solve_residual = solve_single(params)
+
+    cogging_period = cogging_period_mech(params)
+    rotor_angles_mech = np.linspace(0.0, cogging_period, cogging_point_count)
+    cogging_torque_nm = np.empty(cogging_point_count, dtype=float)
+
+    for idx, rotor_angle in enumerate(rotor_angles_mech):
+        rotated_params = replace(params, initial_rotor_angle_mech=float(rotor_angle))
+        Br_rot, Btheta_rot, _ = solve_single(rotated_params)
+        cogging_torque_nm[idx] = average_torque_maxwell(
+            theta_mech=theta,
+            Br=Br_rot,
+            Btheta=Btheta_rot,
+            radius=eval_radius,
+            params=rotated_params,
+        )
+
+    return PMOnly5RegionSolution(
+        params=params,
+        theta_mech=theta,
+        harmonic_orders=harmonic_orders,
+        eval_radius=eval_radius,
+        Br_gap=Br_gap,
+        Btheta_gap=Btheta_gap,
+        rotor_angles_mech=rotor_angles_mech,
+        cogging_torque_nm=cogging_torque_nm,
+        system_size=10 * harmonic_count,
+        solve_residual=solve_residual,
+    )
+
+
+# main.py
+from __future__ import annotations
+
+import numpy as np
+
+from config import LinearPMModelParams
+from solver import solve_linear_5region_pm_only
+
+
+def main() -> None:
+    params = LinearPMModelParams()
+    solution = solve_linear_5region_pm_only(params)
+
+    print("5-region PM-only with slotting")
+    print(f"harmonics used [count]     : {len(solution.harmonic_orders):12d}")
+    print(f"block system size          : {solution.system_size:12d}")
+    print(f"solve residual             : {solution.solve_residual:12.3e}")
+    print(f"eval radius [m]            : {solution.eval_radius:12.6f}")
+    print(f"Br peak [T]                : {np.max(np.abs(solution.Br_gap)):12.6f}")
+    print(f"Btheta peak [T]            : {np.max(np.abs(solution.Btheta_gap)):12.6f}")
+    print(f"cogging pk-pk [Nm]         : {np.ptp(solution.cogging_torque_nm):12.6f}")
+    print(f"cogging max |T| [Nm]       : {np.max(np.abs(solution.cogging_torque_nm)):12.6f}")
+
+
+if __name__ == "__main__":
+    main()
