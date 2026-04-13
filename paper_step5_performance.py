@@ -89,7 +89,9 @@ def rhs_for_delta(
 
     first_appendix_2_row = 2 * layout.m_count
     for mi, (mc, Mr_m, Mt_m) in enumerate(zip(mc_values, Mr_values, Mt_values)):
-        source = xprime_mj_at_ru(mc, Mr_m, Mt_m, Rl, Ru, boundary_params.mu0)
+        # Keep this in sync with Appendix 2 in paper_step3_boundary_matrix.py:
+        # tangential H continuity adds the missing mu0*Mtheta source term.
+        source = xprime_mj_at_ru(mc, Mr_m, Mt_m, Rl, Ru, boundary_params.mu0) + boundary_params.mu0 * Mt_m
         y[first_appendix_2_row + 2 * mi] = -(source / boundary_params.mu_r) * np.sin(mc * delta_rad)
         y[first_appendix_2_row + 2 * mi + 1] = (source / boundary_params.mu_r) * np.cos(mc * delta_rad)
     return y

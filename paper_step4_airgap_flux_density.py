@@ -206,8 +206,9 @@ def save_flux_outputs(
 ) -> tuple[Path, Path]:
     output_dir = Path(params.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    model = params.boundary.magnetization_model
 
-    data_path = output_dir / "fig9_no_load_flux_density_data.npz"
+    data_path = output_dir / f"fig9_no_load_flux_density_{model}_data.npz"
     np.savez_compressed(
         data_path,
         theta_elec_deg=theta_elec_deg,
@@ -215,10 +216,17 @@ def save_flux_outputs(
         Btheta_T=Btheta,
         residuals=np.asarray(residuals),
         airgap_radius_m=params.airgap_radius_m,
+        magnetization_model=model,
     )
 
     fig, axes = plt.subplots(2, 1, figsize=(7.2, 8.0), constrained_layout=True)
-    axes[0].plot(theta_elec_deg, Br, color="#E68613", linewidth=2.2, label="Proposed new technique")
+    axes[0].plot(
+        theta_elec_deg,
+        Br,
+        color="#E68613",
+        linewidth=2.2,
+        label=f"{model}: Br max={np.max(Br):.4f} T",
+    )
     axes[0].set_ylabel("Radial flux density (T)", fontsize=12)
     axes[0].set_xlim(-90, 90)
     axes[0].set_ylim(min(-0.05, float(np.min(Br)) * 1.1), max(1.0, float(np.max(Br)) * 1.1))
@@ -227,7 +235,13 @@ def save_flux_outputs(
     axes[0].legend(frameon=False, fontsize=11, loc="upper right")
     axes[0].text(0.5, -0.22, "(a)", transform=axes[0].transAxes, ha="center", va="top", fontsize=14)
 
-    axes[1].plot(theta_elec_deg, Btheta, color="#E68613", linewidth=2.2, label="Proposed new technique")
+    axes[1].plot(
+        theta_elec_deg,
+        Btheta,
+        color="#E68613",
+        linewidth=2.2,
+        label=f"{model}: Btheta max={np.max(np.abs(Btheta)):.4f} T",
+    )
     axes[1].set_xlabel("Position (Elec.Deg.)", fontsize=12)
     axes[1].set_ylabel("Tangential flux density (T)", fontsize=12)
     axes[1].set_xlim(-90, 90)
@@ -237,8 +251,12 @@ def save_flux_outputs(
     axes[1].legend(frameon=False, fontsize=11, loc="upper right")
     axes[1].text(0.5, -0.22, "(b)", transform=axes[1].transAxes, ha="center", va="top", fontsize=14)
 
-    plot_path = output_dir / "fig9_no_load_flux_density.png"
+    plot_path = output_dir / f"fig9_no_load_flux_density_{model}.png"
     fig.savefig(plot_path, dpi=200, bbox_inches="tight")
+    # Keep the old filename as the latest-run convenience output. Use the
+    # model-specific filename above for comparisons to avoid viewer/cache mixups.
+    latest_plot_path = output_dir / "fig9_no_load_flux_density.png"
+    fig.savefig(latest_plot_path, dpi=200, bbox_inches="tight")
     plt.close(fig)
     return plot_path, data_path
 
