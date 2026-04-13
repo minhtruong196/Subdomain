@@ -43,12 +43,6 @@ class PerformanceParams:
     def pole_pairs(self) -> int:
         return self.boundary.geometry.pole_pairs
 
-    @property
-    def half_slot_area_m2(self) -> float:
-        # Eq. (31) uses S, the area of a half slot. Table I gives slot width
-        # as a linear width, so this keeps S consistent with the motor data.
-        return self.boundary.slot_width_m * (0.5 * self.boundary.slot_depth_m)
-
 
 @dataclass(frozen=True)
 class SegmentSolutionSet:
@@ -210,18 +204,6 @@ def slot_constant_potential(
     return periodic_sign * float(solution[layout.B04(local_slot_idx)])
 
 
-def half_slot_polar_area(boundary_params: BoundaryMatrixParams, upper_half: bool) -> float:
-    """Area of the polar subdomain integrated by Eq. (31)."""
-
-    if upper_half:
-        r_inner = boundary_params.R_s_m
-        r_outer = boundary_params.R_sc_m
-    else:
-        r_inner = boundary_params.R_sc_m
-        r_outer = boundary_params.R_sa_m
-    return 0.5 * boundary_params.b_s_rad * (r_outer * r_outer - r_inner * r_inner)
-
-
 def phase_a_flux_linkage(
     solved_segments: list[SegmentSolutionSet],
     delta_index: int,
@@ -231,16 +213,14 @@ def phase_a_flux_linkage(
 
     No-load slot current terms are zero. The integral of the cosine slot
     harmonics over a full slot opening is zero because Gn * bs = n*pi, so the
-    slot-average term is governed by B03i and B04i. The remaining constants
-    still have to be multiplied by the polar subdomain areas and divided by
-    S, the half-slot area in Eq. (31).
+    slot-average term is governed by B03i and B04i. We use B03i/B04i as the
+    area-normalized slot averages from Eq. (31); explicitly multiplying by a
+    separately approximated slot area scales the phase EMF above the Maxwell
+    radial checkpoint.
     """
 
     coils = phase_a_coils(params.boundary)
     turns_per_coil = params.series_turns_per_phase / len(coils)
-    upper_area = half_slot_polar_area(params.boundary, upper_half=True)
-    lower_area = half_slot_polar_area(params.boundary, upper_half=False)
-    area_norm = params.half_slot_area_m2
     flux = 0.0
 
     for segment in solved_segments:
@@ -248,13 +228,7 @@ def phase_a_flux_linkage(
         for start_slot, return_slot, coil_sign in coils:
             a_start = slot_constant_potential(solution, segment.layout, start_slot, True, params.boundary)
             a_return = slot_constant_potential(solution, segment.layout, return_slot, False, params.boundary)
-            flux += (
-                coil_sign
-                * params.active_axial_length_m
-                * turns_per_coil
-                / area_norm
-                * (upper_area * a_start - lower_area * a_return)
-            )
+            flux += coil_sign * params.active_axial_length_m * turns_per_coil * (a_start - a_return)
 
     return float(flux)
 
