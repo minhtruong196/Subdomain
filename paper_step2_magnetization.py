@@ -19,6 +19,7 @@ class MagnetizationParams:
     mu0: float = 4.0 * np.pi * 1.0e-7
     max_pole_harmonic: int = 200
     delta_rad: float = 0.0
+    magnetization_model: str = "parallel"
     sample_count: int = 4000
     output_dir: str = "outputs/step2_magnetization"
 
@@ -66,6 +67,21 @@ def magnetization_coefficients(
 
     mc = mechanical_harmonic_orders(params).astype(float)
     zeta0 = params.geometry.zeta0_rad
+
+    if params.magnetization_model == "radial":
+        nu = pole_harmonic_orders(params).astype(float)
+        Mr_m = (
+            4.0
+            * params.Br_T
+            / (nu * np.pi * params.mu0)
+            * (np.sin(mc * j * zeta0) - np.sin(mc * (j - 1) * zeta0))
+        )
+        Mt_m = np.zeros_like(Mr_m)
+        return mc, Mr_m, Mt_m
+
+    if params.magnetization_model != "parallel":
+        raise ValueError("magnetization_model must be 'parallel' or 'radial'")
+
     factor = 2.0 * params.geometry.pole_pairs * params.Br_T / (np.pi * params.mu0)
 
     Mr_m = np.empty_like(mc)
@@ -172,6 +188,7 @@ def main() -> None:
     print(f"j                         : {j}")
     print(f"slots, poles              : {params.geometry.slots}, {params.geometry.poles}")
     print(f"p = c                     : {params.geometry.pole_pairs}")
+    print(f"magnetization model       : {params.magnetization_model}")
     print(f"max pole harmonic nu      : {params.max_pole_harmonic}")
     print(f"kept harmonic count       : {len(mc)}")
     print(f"first mc values           : {mc[:8].astype(int).tolist()}")

@@ -22,6 +22,7 @@ class AirgapFluxParams:
     """Step 4 parameters for no-load air-gap flux density."""
 
     boundary: BoundaryMatrixParams = BoundaryMatrixParams()
+    # Paper value from Eq. (30)'s text.
     airgap_radius_m: float = 88.4e-3
     sample_count: int = 721
     output_dir: str = "outputs/step4_airgap_flux_density"
@@ -164,6 +165,7 @@ def total_no_load_flux_density(params: AirgapFluxParams) -> tuple[np.ndarray, np
             segment_j=segment_j,
             max_pole_harmonic=params.boundary.max_pole_harmonic,
             slot_harmonics=params.boundary.slot_harmonics,
+            magnetization_model=params.boundary.magnetization_model,
             Br_T=params.boundary.Br_T,
             mu0=params.boundary.mu0,
             mu_r=params.boundary.mu_r,
@@ -248,6 +250,7 @@ def main() -> None:
 
     print("Step 4 air-gap flux density")
     print(f"segments superposed       : {params.boundary.geometry.Nz}")
+    print(f"magnetization model       : {params.boundary.magnetization_model}")
     print(f"air-gap radius Rg [m]     : {params.airgap_radius_m:.9f}")
     print(f"theta range [Elec.Deg.]   : {theta_elec_deg[0]:.1f} to {theta_elec_deg[-1]:.1f}")
     print(f"Br min/max [T]            : {np.min(Br): .6e}, {np.max(Br): .6e}")

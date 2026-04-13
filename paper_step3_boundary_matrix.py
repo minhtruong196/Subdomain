@@ -17,6 +17,8 @@ class BoundaryMatrixParams:
     segment_j: int = 1
     max_pole_harmonic: int = 200
     slot_harmonics: int = 10
+    # Magnetization model: "parallel" follows Eq. (10)-(12), "radial" follows Eq. (15).
+    magnetization_model: str = "radial"
 
     Br_T: float = 1.065
     mu0: float = 4.0 * np.pi * 1.0e-7
@@ -25,6 +27,8 @@ class BoundaryMatrixParams:
     # the neutral checkpoint value first.
     mu_r: float = 1.0
 
+    # Table I value. A sensitivity check with 87.8e-3 gives a near-1 mm gap,
+    # but the paper states Rg = 88.4 mm, which implies Rs = 90 mm.
     stator_inner_radius_m: float = 90.0e-3
     slot_depth_m: float = 33.0e-3
     slot_width_m: float = 4.2e-3
@@ -313,6 +317,7 @@ def build_boundary_matrix(params: BoundaryMatrixParams) -> tuple[np.ndarray, np.
         mu0=params.mu0,
         max_pole_harmonic=params.max_pole_harmonic,
         delta_rad=params.delta_rad,
+        magnetization_model=params.magnetization_model,
     )
     mc_values, Mr_values, Mt_values = magnetization_coefficients(params.segment_j, mag_params)
 
@@ -485,6 +490,7 @@ def main() -> None:
     print(f"odd periodic c            : {params.c_periods}")
     print(f"reduced slot count        : {layout.slot_count}")
     print(f"pole harmonics kept       : {layout.m_count} (nu <= {params.max_pole_harmonic}, odd only)")
+    print(f"magnetization model       : {params.magnetization_model}")
     print(f"slot harmonics n          : {layout.n_count}")
     print(f"matrix shape              : {K.shape}")
     print(f"rhs norm                  : {np.linalg.norm(Y):.6e}")
