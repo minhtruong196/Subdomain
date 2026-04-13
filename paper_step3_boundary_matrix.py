@@ -18,7 +18,7 @@ class BoundaryMatrixParams:
     max_pole_harmonic: int = 200
     slot_harmonics: int = 10
     # Magnetization model: "parallel" follows Eq. (10)-(12), "radial" follows Eq. (15).
-    magnetization_model: str = "radial"
+    magnetization_model: str = "parallel"                                                           # fix magnetization direction
 
     Br_T: float = 1.065
     mu0: float = 4.0 * np.pi * 1.0e-7
@@ -355,8 +355,12 @@ def build_boundary_matrix(params: BoundaryMatrixParams) -> tuple[np.ndarray, np.
         row += 1
 
     # Appendix 2: equations of Am2 and Cm2, including the magnetization source.
+    # At the PM/air-gap boundary the tangential H field is continuous:
+    # (1/mu_r) dAz1/dr + (mu0/mu_r) Mtheta = dAz2/dr.  The paper's Appendix
+    # omits this explicit Mtheta boundary term, which is harmless for radial
+    # magnetization but suppresses the parallel-magnetized field.
     for mi, (mc, Mr_m, Mt_m) in enumerate(zip(mc_values, Mr_values, Mt_values)):
-        boundary_source = xprime_mj_at_ru(mc, Mr_m, Mt_m, Rl, Ru, params.mu0)
+        boundary_source = xprime_mj_at_ru(mc, Mr_m, Mt_m, Rl, Ru, params.mu0) + params.mu0 * Mt_m
         a_coeff = mc / (params.mu_r * Ru) * ratio_e_over_p(mc, Ru, Rl)
 
         K[row, layout.Am2(mi)] = 1.0
