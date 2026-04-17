@@ -13,10 +13,10 @@ class GeometryConfig:
     poles: int = 12
     Nz: int = 16
 
-    alpha_p: float = 0.9                               
-    h_mm: float = 20
+    alpha_p: float = 0.922                               
+    h_mm: float = 0
     hp_mm: float = 83
-    edge_radius_mode: str = "profile"
+    edge_radius_mode: str = "midpoint"
     edge_pm_side_length_mm: float | None = None
 
     @property
@@ -39,7 +39,7 @@ class StatorConfig:
     stator_inner_radius_m: float = 90 * 1e-3
     slot_depth_m: float = 33.0e-3
     slot_width_m: float = 4.2e-3
-    airgap_length_m: float = 2 * 1e-3
+    airgap_length_m: float = 1 * 1e-3
     # None means use the middle of the physical air gap:
     # 0.5 * (stator inner radius + rotor outer radius).
     airgap_radius_m: float | None = None
@@ -172,8 +172,8 @@ class MachineConfig:
             raise ValueError("Rp must be positive: Ror - h > 0")
         if self.airgap_length_m <= 0.0:
             raise ValueError("air-gap length must be positive: stator_inner_radius > rotor_outer_radius")
-        if self.geometry.edge_radius_mode not in {"profile", "side_length"}:
-            raise ValueError("edge_radius_mode must be 'profile' or 'side_length'")
+        if self.geometry.edge_radius_mode not in {"midpoint", "profile", "side_length"}:
+            raise ValueError("edge_radius_mode must be 'midpoint', 'profile', or 'side_length'")
 
     def with_stator(self, **changes: float) -> MachineConfig:
         return replace(self, stator=replace(self.stator, **changes))

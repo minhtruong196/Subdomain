@@ -50,9 +50,9 @@ def parse_args(default_task: str = "all") -> argparse.Namespace:
     parser.add_argument("--h-mm", type=float, default=None, help="Override shaping offset h.")
     parser.add_argument(
         "--edge-radius-mode",
-        choices=["profile", "side_length"],
+        choices=["midpoint", "profile", "side_length"],
         default=None,
-        help="Use the outer profile at the last PM segment or the legacy PM side length.",
+        help="Rule for the last PM segment radius: midpoint, outer profile, or legacy PM side length.",
     )
     parser.add_argument("--edge-pm-side-length-mm", type=float, default=None, help="PM edge side length for side_length mode.")
     parser.add_argument("--g-mm", type=float, default=None, help="Set air-gap length; derives Ror = Ris - g.")

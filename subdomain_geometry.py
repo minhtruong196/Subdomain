@@ -25,13 +25,17 @@ def lower_radius_regular_mm(zeta_rad: float, config: MachineConfig) -> float:
 
 
 def upper_radius_edge_mm(edge_zeta_rad: float, config: MachineConfig) -> float:
+    if config.geometry.edge_radius_mode == "midpoint":
+        r_l_edge = lower_radius_regular_mm(edge_zeta_rad, config)
+        r_u_outer = upper_radius_regular_mm(edge_zeta_rad, config)
+        return float(0.5 * (r_l_edge + r_u_outer))
     if config.geometry.edge_radius_mode == "profile":
         return upper_radius_regular_mm(edge_zeta_rad, config)
     if config.geometry.edge_radius_mode == "side_length":
         if config.geometry.edge_pm_side_length_mm is None:
             raise ValueError("edge_pm_side_length_mm is required when edge_radius_mode='side_length'")
         return lower_radius_regular_mm(edge_zeta_rad, config) + 0.5 * config.geometry.edge_pm_side_length_mm
-    raise ValueError("edge_radius_mode must be 'profile' or 'side_length'")
+    raise ValueError("edge_radius_mode must be 'midpoint', 'profile', or 'side_length'")
 
 
 def segment_radii_mm(config: MachineConfig) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
