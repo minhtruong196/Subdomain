@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import numpy as np
 
 from subdomain_config import MachineConfig
-from subdomain_geometry import selected_segment_radii_m, theta_i
+from subdomain_geometry import selected_segment_radii_m, theta_i, validate_rotor_geometry
 from subdomain_magnetization import magnetization_coefficients
 
 
@@ -247,6 +247,8 @@ def build_boundary_matrix(
     segment_j: int = 1,
     delta_rad: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray, UnknownLayout, dict[str, np.ndarray | float]]:
+    config.validate_dimensions()
+    validate_rotor_geometry(config)
     mc_values, Mr_values, Mt_values = magnetization_coefficients(segment_j, config)
 
     layout = UnknownLayout(

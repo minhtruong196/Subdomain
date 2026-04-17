@@ -138,7 +138,7 @@ def total_no_load_flux_density(config: MachineConfig) -> tuple[np.ndarray, np.nd
         mc_values = np.asarray(meta["mc_values"], dtype=float)
 
         Br_j, Btheta_j = segment_flux_density(
-            config.stator.airgap_radius_m,
+            config.airgap_radius_m,
             theta_mech_rad,
             solution,
             layout,
@@ -165,7 +165,7 @@ def full_airgap_flux_density(
         solution = segment.solutions[:, delta_index]
         mc_values = np.asarray(segment.meta["mc_values"], dtype=float)
         Br_j, Btheta_j = segment_flux_density(
-            config.stator.airgap_radius_m,
+            config.airgap_radius_m,
             theta_mech_rad,
             solution,
             segment.layout,

@@ -13,11 +13,11 @@ class GeometryConfig:
     poles: int = 12
     Nz: int = 16
 
-    alpha_p: float = 0.922
-    h_mm: float = 57.0
-    Rp_mm: float = 29.8
-    hp_mm: float = 77.05
-    pm_side_length_mm: float = 2.42
+    alpha_p: float = 0.9                               
+    h_mm: float = 20
+    hp_mm: float = 83
+    edge_radius_mode: str = "profile"
+    edge_pm_side_length_mm: float | None = None
 
     @property
     def pole_pairs(self) -> int:
@@ -36,10 +36,13 @@ class GeometryConfig:
 class StatorConfig:
     """Stator dimensions shared by boundary, air-gap, and performance code."""
 
-    stator_inner_radius_m: float = 90.0e-3
+    stator_inner_radius_m: float = 90 * 1e-3
     slot_depth_m: float = 33.0e-3
     slot_width_m: float = 4.2e-3
-    airgap_radius_m: float = 88.4e-3
+    airgap_length_m: float = 2 * 1e-3
+    # None means use the middle of the physical air gap:
+    # 0.5 * (stator inner radius + rotor outer radius).
+    airgap_radius_m: float | None = None
 
     @property
     def R_s_m(self) -> float:
@@ -63,7 +66,7 @@ class MagnetConfig:
     Br_T: float = 1.065
     mu0: float = 4.0 * np.pi * 1.0e-7
     mu_r: float = 1.0
-    magnetization_model: str = "parallel"
+    magnetization_model: str = "radial"         #radial or parallel
 
     @property
     def M0_A_per_m(self) -> float:
@@ -90,8 +93,8 @@ class CurrentConfig:
 class OperatingConfig:
     active_axial_length_m: float = 88.0e-3
     rated_speed_rpm: float = 900.0
-    series_turns_per_phase: int = 144
-    coil_pitch_slots: int = 5
+    series_turns_per_phase: int = 144       #conductors per slot = series_turns_per_phase*2/(slot/3)
+    coil_pitch_slots: int = 5               #short pitch
     torque_position_count: int = 121
     torque_theta_count: int = 1440
     emf_sample_count: int = 361
@@ -134,8 +137,49 @@ class MachineConfig:
     def reduced_slot_count(self) -> int:
         return self.geometry.slots // (2 * self.c_periods)
 
+    @property
+    def rotor_outer_radius_m(self) -> float:
+        return self.stator.R_s_m - self.stator.airgap_length_m
+
+    @property
+    def rotor_outer_radius_mm(self) -> float:
+        return self.rotor_outer_radius_m * 1.0e3
+
+    @property
+    def Rp_mm(self) -> float:
+        return self.rotor_outer_radius_mm - self.geometry.h_mm
+
+    @property
+    def magnet_depth_mm(self) -> float:
+        return self.rotor_outer_radius_mm - self.geometry.hp_mm
+
+    @property
+    def airgap_length_m(self) -> float:
+        return self.stator.airgap_length_m
+
+    @property
+    def airgap_radius_m(self) -> float:
+        if self.stator.airgap_radius_m is not None:
+            return self.stator.airgap_radius_m
+        return 0.5 * (self.stator.R_s_m + self.rotor_outer_radius_m)
+
+    def validate_dimensions(self) -> None:
+        if self.geometry.poles % 2:
+            raise ValueError("poles must be even")
+        if self.magnet_depth_mm <= 0.0:
+            raise ValueError("magnet depth must be positive: Ror - hp > 0")
+        if self.Rp_mm <= 0.0:
+            raise ValueError("Rp must be positive: Ror - h > 0")
+        if self.airgap_length_m <= 0.0:
+            raise ValueError("air-gap length must be positive: stator_inner_radius > rotor_outer_radius")
+        if self.geometry.edge_radius_mode not in {"profile", "side_length"}:
+            raise ValueError("edge_radius_mode must be 'profile' or 'side_length'")
+
     def with_stator(self, **changes: float) -> MachineConfig:
         return replace(self, stator=replace(self.stator, **changes))
+
+    def with_geometry(self, **changes: float | int | str | None) -> MachineConfig:
+        return replace(self, geometry=replace(self.geometry, **changes))
 
     def with_magnet(self, **changes: float | str) -> MachineConfig:
         return replace(self, magnet=replace(self.magnet, **changes))

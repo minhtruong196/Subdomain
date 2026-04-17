@@ -22,7 +22,7 @@ def cogging_torque_waveform(config: MachineConfig) -> tuple[np.ndarray, np.ndarr
         integral = 2.0 * np.pi * np.mean(Br * Btheta)
         torque_nm[idx] = (
             config.operating.active_axial_length_m
-            * config.stator.airgap_radius_m**2
+            * config.airgap_radius_m**2
             / config.magnet.mu0
             * integral
         )

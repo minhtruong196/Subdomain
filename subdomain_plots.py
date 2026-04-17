@@ -17,7 +17,7 @@ def save_geometry_plot(config: MachineConfig) -> Path:
     output_dir = Path(config.outputs.geometry_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    orders, Ru, Rl = segment_radii_mm(config.geometry)
+    orders, Ru, Rl = segment_radii_mm(config)
     fig, ax = plt.subplots(figsize=(8, 5.6), constrained_layout=True)
     ax.plot(orders, Ru, "o-", color="#0072BD", linewidth=2.2, markersize=8, label=r"$R_u$")
     ax.plot(orders, Rl, "o-", color="#D95319", linewidth=2.2, markersize=8, label=r"$R_l$")
@@ -39,7 +39,7 @@ def save_geometry_plot(config: MachineConfig) -> Path:
 def save_geometry_table(config: MachineConfig) -> Path:
     output_dir = Path(config.outputs.geometry_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    orders, Ru_mm, Rl_mm = segment_radii_mm(config.geometry)
+    orders, Ru_mm, Rl_mm = segment_radii_mm(config)
     zeta_deg = [
         np.rad2deg(zeta_j_rad(int(j), config.geometry))
         if j < config.geometry.Nz
@@ -140,7 +140,7 @@ def save_flux_outputs(
         Br_T=Br,
         Btheta_T=Btheta,
         residuals=np.asarray(residuals),
-        airgap_radius_m=config.stator.airgap_radius_m,
+        airgap_radius_m=config.airgap_radius_m,
         magnetization_model=model,
     )
 
@@ -195,7 +195,7 @@ def save_performance_plots(
         no_load_phase_back_emf_v=phase_emf_v,
         no_load_line_line_back_emf_v=line_line_emf_v,
         phase_a_flux_linkage_wb=flux_linkage,
-        airgap_radius_m=config.stator.airgap_radius_m,
+        airgap_radius_m=config.airgap_radius_m,
         magnetization_model=config.magnet.magnetization_model,
     )
 

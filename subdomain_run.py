@@ -8,7 +8,7 @@ import numpy as np
 from subdomain_airgap import total_no_load_flux_density
 from subdomain_boundary import solve_boundary_matrix
 from subdomain_config import MachineConfig
-from subdomain_geometry import segment_radii_mm
+from subdomain_geometry import segment_radii_mm, validate_rotor_geometry
 from subdomain_magnetization import (
     exact_mr_pair,
     magnetization_coefficients,
@@ -42,7 +42,23 @@ def parse_args(default_task: str = "airgap") -> argparse.Namespace:
         help=f"Calculation to run. Default: {default_task}.",
     )
     parser.add_argument("--segment", type=int, default=1, help="PM segment index for boundary/magnetization tasks.")
-    parser.add_argument("--airgap-radius-mm", type=float, default=None, help="Override air-gap evaluation radius.")
+    parser.add_argument("--slots", type=int, default=None, help="Override slot count.")
+    parser.add_argument("--poles", type=int, default=None, help="Override pole count.")
+    parser.add_argument("--nz", type=int, default=None, help="Override PM segment count.")
+    parser.add_argument("--alpha", type=float, default=None, help="Override pole-arc coefficient.")
+    parser.add_argument("--hp-mm", type=float, default=None, help="Override PM inner radius hp.")
+    parser.add_argument("--h-mm", type=float, default=None, help="Override shaping offset h.")
+    parser.add_argument(
+        "--edge-radius-mode",
+        choices=["profile", "side_length"],
+        default=None,
+        help="Use the outer profile at the last PM segment or the legacy PM side length.",
+    )
+    parser.add_argument("--edge-pm-side-length-mm", type=float, default=None, help="PM edge side length for side_length mode.")
+    parser.add_argument("--g-mm", type=float, default=None, help="Set air-gap length; derives Ror = Ris - g.")
+    parser.add_argument("--dm-mm", type=float, default=None, help="Set magnet depth; derives hp = Ror - dm.")
+    parser.add_argument("--stator-inner-radius-mm", type=float, default=None, help="Override stator inner radius Ris.")
+    parser.add_argument("--airgap-radius-mm", type=float, default=None, help="Override air-gap evaluation radius Rg.")
     parser.add_argument("--br", type=float, default=None, help="Override PM remanence Br in tesla.")
     parser.add_argument("--max-pole-harmonic", type=int, default=None, help="Override maximum pole harmonic nu.")
     parser.add_argument("--slot-harmonics", type=int, default=None, help="Override slot harmonic count.")
@@ -55,10 +71,37 @@ def build_config(args: argparse.Namespace) -> MachineConfig:
     config = MachineConfig()
 
     stator_changes: dict[str, float] = {}
+    if args.stator_inner_radius_mm is not None:
+        stator_changes["stator_inner_radius_m"] = args.stator_inner_radius_mm * 1.0e-3
+    if args.g_mm is not None:
+        stator_changes["airgap_length_m"] = args.g_mm * 1.0e-3
     if args.airgap_radius_mm is not None:
         stator_changes["airgap_radius_m"] = args.airgap_radius_mm * 1.0e-3
     if stator_changes:
         config = replace(config, stator=replace(config.stator, **stator_changes))
+
+    geometry_changes: dict[str, float | int] = {}
+    if args.slots is not None:
+        geometry_changes["slots"] = args.slots
+    if args.poles is not None:
+        geometry_changes["poles"] = args.poles
+    if args.nz is not None:
+        geometry_changes["Nz"] = args.nz
+    if args.alpha is not None:
+        geometry_changes["alpha_p"] = args.alpha
+    if args.h_mm is not None:
+        geometry_changes["h_mm"] = args.h_mm
+    if args.edge_radius_mode is not None:
+        geometry_changes["edge_radius_mode"] = args.edge_radius_mode
+    if args.edge_pm_side_length_mm is not None:
+        geometry_changes["edge_pm_side_length_mm"] = args.edge_pm_side_length_mm
+
+    if args.dm_mm is not None:
+        geometry_changes["hp_mm"] = config.rotor_outer_radius_mm - args.dm_mm
+    if args.hp_mm is not None:
+        geometry_changes["hp_mm"] = args.hp_mm
+    if geometry_changes:
+        config = replace(config, geometry=replace(config.geometry, **geometry_changes))
 
     magnet_changes: dict[str, float | str] = {}
     if args.br is not None:
@@ -90,17 +133,23 @@ def build_config(args: argparse.Namespace) -> MachineConfig:
     if solver_changes:
         config = replace(config, solver=replace(config.solver, **solver_changes))
 
+    config.validate_dimensions()
+    validate_rotor_geometry(config)
     return config
 
 
 def run_geometry(config: MachineConfig) -> None:
-    orders, Ru, Rl = segment_radii_mm(config.geometry)
+    orders, Ru, Rl = segment_radii_mm(config)
     plot_path = save_geometry_plot(config)
     table_path = save_geometry_table(config)
 
     print("Subdomain geometry")
     print(f"slots, poles, pole pairs  : {config.geometry.slots}, {config.geometry.poles}, {config.geometry.pole_pairs}")
     print(f"segments Nz               : {config.geometry.Nz}")
+    print(f"Ror, hp, dm [mm]          : {config.rotor_outer_radius_mm:.6f}, {config.geometry.hp_mm:.6f}, {config.magnet_depth_mm:.6f}")
+    print(f"Rp, h [mm]                : {config.Rp_mm:.6f}, {config.geometry.h_mm:.6f}")
+    print(f"g, Rg [mm]                : {config.airgap_length_m * 1.0e3:.6f}, {config.airgap_radius_m * 1.0e3:.6f}")
+    print(f"edge radius mode          : {config.geometry.edge_radius_mode}")
     print(f"Ru min/max [mm]           : {np.min(Ru):.6f}, {np.max(Ru):.6f}")
     print(f"Rl min/max [mm]           : {np.min(Rl):.6f}, {np.max(Rl):.6f}")
     print(f"first/last segment        : {orders[0]}, {orders[-1]}")
@@ -140,7 +189,7 @@ def run_boundary(config: MachineConfig, segment_j: int) -> None:
     print(f"relative residual         : {residual:.6e}")
     print(f"Ru, Rl [m]                : {meta['R_u_m']:.9f}, {meta['R_l_m']:.9f}")
     print(f"Rs, Rsc, Rsa [m]          : {meta['R_s_m']:.9f}, {meta['R_sc_m']:.9f}, {meta['R_sa_m']:.9f}")
-    print(f"airgap radius Rg [m]      : {config.stator.airgap_radius_m:.9f}")
+    print(f"airgap radius Rg [m]      : {config.airgap_radius_m:.9f}")
     print(f"saved                     : {output_path.resolve()}")
 
 
@@ -151,7 +200,8 @@ def run_airgap(config: MachineConfig) -> None:
     print("Subdomain air-gap flux density")
     print(f"segments superposed       : {config.geometry.Nz}")
     print(f"magnetization model       : {config.magnet.magnetization_model}")
-    print(f"air-gap radius Rg [m]     : {config.stator.airgap_radius_m:.9f}")
+    print(f"air-gap length g [m]      : {config.airgap_length_m:.9f}")
+    print(f"air-gap radius Rg [m]     : {config.airgap_radius_m:.9f}")
     print(f"theta range [Elec.Deg.]   : {theta_elec_deg[0]:.1f} to {theta_elec_deg[-1]:.1f}")
     print(f"Br min/max [T]            : {np.min(Br): .6e}, {np.max(Br): .6e}")
     print(f"Btheta min/max [T]        : {np.min(Btheta): .6e}, {np.max(Btheta): .6e}")
@@ -170,7 +220,8 @@ def run_performance(config: MachineConfig) -> None:
 
     print("Subdomain electromagnetic performance")
     print(f"magnetization model       : {config.magnet.magnetization_model}")
-    print(f"air-gap radius Rg [m]     : {config.stator.airgap_radius_m:.9f}")
+    print(f"air-gap length g [m]      : {config.airgap_length_m:.9f}")
+    print(f"air-gap radius Rg [m]     : {config.airgap_radius_m:.9f}")
     print(f"speed [r/min]             : {config.operating.rated_speed_rpm:.3f}")
     print(f"phase-A coils             : {len(phase_a_coils(config))}")
     print(f"cogging min/max [mN.m]    : {np.min(torque_mNm): .6e}, {np.max(torque_mNm): .6e}")
