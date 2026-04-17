@@ -32,7 +32,7 @@ from subdomain_plots import (
 )
 
 
-def parse_args(default_task: str = "airgap") -> argparse.Namespace:
+def parse_args(default_task: str = "all") -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run the refactored subdomain model.")
     parser.add_argument(
         "task",
@@ -233,7 +233,7 @@ def run_performance(config: MachineConfig) -> None:
     print(f"data                      : {data_path.resolve()}")
 
 
-def main(default_task: str = "airgap") -> None:
+def main(default_task: str = "all") -> None:
     args = parse_args(default_task=default_task)
     config = build_config(args)
 
