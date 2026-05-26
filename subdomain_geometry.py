@@ -24,18 +24,29 @@ def lower_radius_regular_mm(zeta_rad: float, config: MachineConfig) -> float:
     return float(config.geometry.hp_mm / np.cos(zeta_rad))
 
 
-def upper_radius_edge_mm(edge_zeta_rad: float, config: MachineConfig) -> float:
+def edge_radii_mm(edge_zeta_rad: float, config: MachineConfig) -> tuple[float, float]:
+    r_l_outer = lower_radius_regular_mm(edge_zeta_rad, config)
+    r_u_outer = upper_radius_regular_mm(edge_zeta_rad, config)
+
     if config.geometry.edge_radius_mode == "midpoint":
-        r_l_edge = lower_radius_regular_mm(edge_zeta_rad, config)
-        r_u_outer = upper_radius_regular_mm(edge_zeta_rad, config)
-        return float(0.5 * (r_l_edge + r_u_outer))
+        upper_x = r_u_outer * np.sin(edge_zeta_rad)
+        upper_y = r_u_outer * np.cos(edge_zeta_rad)
+        lower_x = r_l_outer * np.sin(edge_zeta_rad)
+        side_length = upper_y - config.geometry.hp_mm
+        Ru = np.hypot(upper_x, config.geometry.hp_mm + 0.5 * side_length)
+        Rl = np.hypot(0.5 * (lower_x + upper_x), config.geometry.hp_mm)
+        return float(Ru), float(Rl)
     if config.geometry.edge_radius_mode == "profile":
-        return upper_radius_regular_mm(edge_zeta_rad, config)
+        return r_u_outer, r_l_outer
     if config.geometry.edge_radius_mode == "side_length":
         if config.geometry.edge_pm_side_length_mm is None:
             raise ValueError("edge_pm_side_length_mm is required when edge_radius_mode='side_length'")
-        return lower_radius_regular_mm(edge_zeta_rad, config) + 0.5 * config.geometry.edge_pm_side_length_mm
+        return r_l_outer + 0.5 * config.geometry.edge_pm_side_length_mm, r_l_outer
     raise ValueError("edge_radius_mode must be 'midpoint', 'profile', or 'side_length'")
+
+
+def upper_radius_edge_mm(edge_zeta_rad: float, config: MachineConfig) -> float:
+    return edge_radii_mm(edge_zeta_rad, config)[0]
 
 
 def segment_radii_mm(config: MachineConfig) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -52,8 +63,7 @@ def segment_radii_mm(config: MachineConfig) -> tuple[np.ndarray, np.ndarray, np.
 
     edge_zeta = geometry.upper_arc_half_angle_rad
     zeta[-1] = edge_zeta
-    Rl[-1] = lower_radius_regular_mm(edge_zeta, config)
-    Ru[-1] = upper_radius_edge_mm(edge_zeta, config)
+    Ru[-1], Rl[-1] = edge_radii_mm(edge_zeta, config)
 
     return orders, Ru, Rl
 

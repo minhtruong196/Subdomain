@@ -167,11 +167,17 @@ def x_mj(
 
 
 def xprime_mj_at_ru(mc: float, Mr_m: float, Mt_m: float, R_l: float, R_u: float, mu0: float) -> float:
-    h = min(1.0e-6, 0.25 * (R_u - R_l))
-    return float(
-        (x_mj(R_u, mc, Mr_m, Mt_m, R_l, R_u, mu0) - x_mj(R_u - h, mc, Mr_m, Mt_m, R_l, R_u, mu0))
-        / h
+    boundary_term = kprime_mj(R_l, mc, Mr_m, Mt_m, mu0) + mu0 * Mt_m
+    upper_term = (
+        (R_l / mc) * (R_l / R_u) ** mc * boundary_term
+        + k_mj(R_u, mc, Mr_m, Mt_m, mu0)
     )
+    derivative = (
+        -R_l * (R_l / R_u) ** mc * boundary_term / R_u
+        + kprime_mj(R_u, mc, Mr_m, Mt_m, mu0)
+        - mc * ratio_e_over_p(mc, R_u, R_l) * upper_term / R_u
+    )
+    return float(derivative)
 
 
 def G_n(n: int, config: MachineConfig) -> float:

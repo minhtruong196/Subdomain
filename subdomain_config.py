@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field, replace
+from math import gcd
 
 import numpy as np
 
@@ -14,8 +15,8 @@ class GeometryConfig:
     Nz: int = 16
 
     alpha_p: float = 0.922                               
-    h_mm: float = 0
-    hp_mm: float = 83
+    h_mm: float = 57
+    hp_mm: float = 77.05
     edge_radius_mode: str = "midpoint"
     edge_pm_side_length_mm: float | None = None
 
@@ -39,7 +40,7 @@ class StatorConfig:
     stator_inner_radius_m: float = 90 * 1e-3
     slot_depth_m: float = 33.0e-3
     slot_width_m: float = 4.2e-3
-    airgap_length_m: float = 1 * 1e-3
+    airgap_length_m: float = 3.2 * 1e-3
     # None means use the middle of the physical air gap:
     # 0.5 * (stator inner radius + rotor outer radius).
     airgap_radius_m: float | None = None
@@ -58,7 +59,7 @@ class StatorConfig:
 
     @property
     def b_s_rad(self) -> float:
-        return self.slot_width_m / self.stator_inner_radius_m
+        return float(2.0 * np.arcsin(self.slot_width_m / (2.0 * self.stator_inner_radius_m)))
 
 
 @dataclass(frozen=True)
@@ -66,7 +67,7 @@ class MagnetConfig:
     Br_T: float = 1.065
     mu0: float = 4.0 * np.pi * 1.0e-7
     mu_r: float = 1.0
-    magnetization_model: str = "radial"         #radial or parallel
+    magnetization_model: str = "parallel"                                               #radial or parallel - Modify here
 
     @property
     def M0_A_per_m(self) -> float:
@@ -131,7 +132,7 @@ class MachineConfig:
 
     @property
     def c_periods(self) -> int:
-        return self.geometry.pole_pairs
+        return gcd(self.geometry.slots, self.geometry.pole_pairs)
 
     @property
     def reduced_slot_count(self) -> int:
