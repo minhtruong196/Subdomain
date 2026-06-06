@@ -1,0 +1,4 @@
+name,x_mm,y_mm,B_abs_T,H_abs_A_per_m,mu_r_abs_from_B_over_mu0H,nearest_label_group,nearest_label_group_name,nearest_label_distance_mm,nearest_boundary_kind,nearest_boundary_group,nearest_boundary_group_name,nearest_boundary_distance_mm
+outer_bridge_lower,37.7,4.3,1.821717441111751,99174.23769176177,14.61747236065412,7,rotor_side_bridge,2.3494696329410516,arc,0,unknown,0.8555996033641903
+outer_bridge_upper,22.5,30.4,1.824317212317248,101245.74635501415,14.338829657584785,7,rotor_side_bridge,2.228575605697039,arc,1,stator_yoke_or_analysis_cut,0.920764706358982
+center_bridge,21.9,12.7,1.8945740904622999,157226.72322821978,9.589045213173614,9,rotor_inner_pm_band_or_center_core,0.06025410768696066,segment,1,stator_yoke_or_analysis_cut,0.6455878457510733

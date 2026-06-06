@@ -1,0 +1,14 @@
+name,value
+Br_relative_l2,0.1034127343101685
+Bt_relative_l2,0.38068026918792525
+Br_best_scalar,1.0508030005686178
+Bt_best_scalar,1.014783732422491
+model_Br_rms,0.4839489816032436
+model_Bt_rms,0.044695690625164014
+femm_Br_rms,0.5106783515674461
+femm_Bt_rms,0.049044356411385194
+input_model_csv,results/tmp_s2_alpha_52/structure2_br_bt.csv
+slotless_femm_csv,results/paper5_slotless_equivalent_1over6/br_bt_arc.csv
+slotted_femm_csv,results/paper_vshape_equivalent_1over6/br_bt_arc.csv
+lambda_harmonics,6
+slots,36

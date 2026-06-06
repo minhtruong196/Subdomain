@@ -1,0 +1,2 @@
+edge_width_deg,window_power,edge_bt_gain,edge_params,bt_mode,model_Br_rms,model_Bt_rms,field_csv
+12.22538107013829,1.0,0.20943951023932,closed-form,untouched,0.5210549193728573,0.038477168421514926,results\paper5_analytical_only_pole_edge_correction_nofemm\pole_edge_corrected_br_bt.csv

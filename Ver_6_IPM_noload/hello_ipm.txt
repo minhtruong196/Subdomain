@@ -1,0 +1,346 @@
+Paper [5] V-shape IPM replication status - clean context
+Date: 2026-06-06
+
+Do not edit these source FEMM builder files:
+- V_shape_equavalent.py
+- V_shape_equavalent_br_bt_export.py
+- build_paper_vshape_model.py
+
+Old unrelated text/story was cleared. Do not use old hello_ipm content as source.
+
+Main objective:
+- Replicate paper [5] analytical/subdomain method for user's V-shape IPM.
+- User already has an equivalent FEMM model: paper_ipm_vshape_equivalent_1over6.FEM.
+- Use equivalent FEMM geometry/parameters as reference, not blindly the author's equivalent conversion if it conflicts with user's equivalent model.
+
+Trusted FEMM bridge permeability sample points from user:
+- outer_bridge_lower: x=37.7, y=4.3, |B|=1.82172 T, |H|=99174.2 A/m, mu_r=14.6175
+- outer_bridge_upper: x=22.5, y=30.4, |B|=1.82432 T, |H|=101246 A/m, mu_r=14.3388
+- center_bridge: x=21.9, y=12.7, |B|=1.89457 T, |H|=157227 A/m, mu_r=9.58905
+
+Useful files/scripts created:
+- paper5_structure2_solver.py
+- paper5_slotting_geometry_model.py
+- paper5_current_best_report.py
+- paper5_equivalent_geometry_audit.py
+- paper5_field_harmonic_audit.py
+- paper5_slotting_correction.py
+- paper5_edge_structure1_sweep.py
+- paper5_pole_edge_correction.py
+- paper5_structure1_integration_test.py
+- paper_vshape_torque_angle_sweep.py
+- paper5_loaded_torque_from_br.py
+- paper5_radial_shift_validation.py
+
+Current practical direction:
+- Temporarily ignore Structure 1.
+- Use Structure 2 as the main slotless subdomain field.
+- Add slotted effect via geometry-only relative permeance.
+- Add pole-edge/fringing correction for the two sector ends; this is currently the best fix for the visibly wrong Br shape at 0-12 deg and 48-60 deg.
+- Keep Structure 1 for later because current Structure 1 implementation does not naturally improve edge errors.
+
+Best "clean / analytical-only" pipeline:
+This version does not use FEMM to generate lambda and does not tune alpha by FEMM.
+
+Commands:
+python .\paper5_structure2_solver.py --benchmark-csv results/does_not_exist.csv --theta-offset-deg 30 --n-harmonics 7 --m-harmonics 7 --k-harmonics 7 --result-dir results/paper5_analytical_only_structure2_default_h7
+
+python .\paper5_slotting_geometry_model.py --model-csv results/paper5_analytical_only_structure2_default_h7/structure2_br_bt.csv --slot-params closed-form --no-femm --result-dir results/paper5_analytical_only_slotting_closed_form_default_h7
+
+For comparison only:
+python .\paper5_slotting_geometry_model.py --model-csv results/paper5_analytical_only_structure2_default_h7/structure2_br_bt.csv --slot-params closed-form --result-dir results/paper5_analytical_only_slotting_closed_form_default_h7_compare
+
+python .\paper5_current_best_report.py --result-dir results/paper5_analytical_only_closed_form_report --subdomain results/paper5_analytical_only_structure2_default_h7/structure2_br_bt.csv --corrected results/paper5_analytical_only_slotting_closed_form_default_h7_compare/geometry_slotting_br_bt.csv --corrected-label "analytical-only S2 + closed-form slotting"
+
+Clean analytical-only result when compared after the fact to FEMM:
+- Br L2 = 0.1428
+- Bt L2 = 0.5126
+
+Important plot:
+- results/paper5_analytical_only_slotting_closed_form_default_h7_compare/geometry_slotting_field_comparison.png
+
+Interpretation:
+- The green line in that plot is not FEMM-derived.
+- Green = Structure 2 slotless analytical + closed-form geometry slotting.
+- Black/gray FEMM lines are only plotted as benchmark after the analytical result is generated.
+- Br looks reasonably close; Bt is still weak.
+- Practical success estimate: Br about 85%, Bt about 50-60%.
+
+New edge/fringing correction after closed-form slotting:
+This is a geometry-only post correction. It does not use FEMM to generate the result; FEMM is only used afterward to score/plot.
+
+Commands:
+python .\paper5_pole_edge_correction.py --bt-mode drive --no-femm --result-dir results/paper5_analytical_only_pole_edge_drive_closed_form_nofemm
+
+For comparison only:
+python .\paper5_pole_edge_correction.py --bt-mode drive --result-dir results/paper5_analytical_only_pole_edge_drive_closed_form_compare
+
+Result when compared after the fact to slotted FEMM:
+- Br L2 all = 0.0465
+- Br L2 edge = 0.0612
+- Bt L2 all = 0.4395
+- Bt L2 edge = 0.4852
+
+Important plot:
+- results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_comparison.png
+
+Interpretation:
+- The pole-edge correction fixes the visibly wrong Br at both ends very well; Br is now below 10% L2.
+- Bt improves but is still far from 10%; it likely needs a better tangential/edge/Structure1 mechanism rather than only a Br window.
+
+Best balanced diagnostic after extra alpha/slot/edge sweep:
+This version is not the clean default. It uses FEMM comparison to choose parameters, but still uses geometry/subdomain-style correction.
+
+Commands:
+python .\paper5_structure2_solver.py --benchmark-csv results/does_not_exist.csv --theta-offset-deg 30 --n-harmonics 7 --m-harmonics 7 --k-harmonics 7 --alpha-deg 52.25 --result-dir results/paper5_structure2_alpha52p25_offset30_h7
+
+python .\paper5_slotting_geometry_model.py --model-csv results/paper5_structure2_alpha52p25_offset30_h7/structure2_br_bt.csv --slot-params manual --lambda-drop 0.32 --lambda-b-gain 0.14 --width-scale 1.0 --result-dir results/paper5_slotting_geometry_alpha52p25_manual_best
+
+python .\paper5_pole_edge_correction.py --model-csv results/paper5_slotting_geometry_alpha52p25_manual_best/geometry_slotting_br_bt.csv --edge-params manual --edge-width-deg 11.5 --window-power 1.0 --edge-bt-gain 0.08 --bt-mode drive --result-dir results/paper5_alpha52p25_slot_edge_best_compare
+
+Balanced result:
+- Br L2 all = 0.0929
+- Bt L2 all = 0.2234
+- Br L2 edge = 0.1828
+- Bt L2 edge = 0.2820
+
+Important plot:
+- results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_comparison.png
+
+Interpretation:
+- This is the best current tradeoff if both Br and Bt matter.
+- Br stays under 10% globally.
+- Bt improves a lot compared with the clean default, but still not near 10%.
+- A quick post-processing Az-window test failed badly; proper Az-level correction likely needs to be built into the subdomain solve or recovered through Structure 1, not applied afterward from one airgap trace.
+
+Latest Structure 1 revisit:
+Kept the current alpha=52.25 slot/edge result as baseline, then tested:
+S2 + k*S1 -> geometry slotting -> pole-edge correction.
+
+Helper:
+- paper5_structure1_integration_test.py
+
+Main run:
+python .\paper5_structure1_integration_test.py --n-harmonics 5 --k-harmonics 5 --g-harmonics 5 --offset-range=-90,90,5 --scale-range=-3,3,0.15 --result-dir results/paper5_structure1_integration_alpha52p25_h5
+
+Baseline before S1:
+- Br L2 all = 0.0929
+- Bt L2 all = 0.2234
+
+Best objective with S1:
+- Br L2 all = 0.0743
+- Bt L2 all = 0.2259
+- scale = 0.3
+- S1 theta offset = -90 deg
+- S1 Eq.(24)-(27) correction = True
+
+Best Bt-only cases:
+- Bt can only improve very slightly to about 0.218, but Br worsens to about 0.13.
+- If Br is constrained below 0.10, Bt stays around 0.223.
+
+Interpretation:
+- Current Structure 1 implementation is useful as a small Br/plateau correction.
+- It does not currently supply the missing tangential field needed to push Bt toward 10%.
+- S1 Bt before scaling is very small; the plotted S1 contribution shows mostly Br.
+- Tested mu_bridge around outer avg 14.478, center 9.589, and harmonics 3/5/7; conclusion did not change.
+
+Loaded torque check:
+Because the equivalent geometry changes magnet shape, pointwise Br/Bt is not expected to match the original base FEMM perfectly. A torque sweep is a better performance-level check.
+
+Helper:
+- paper_vshape_torque_angle_sweep.py
+
+Runs:
+python .\paper_vshape_torque_angle_sweep.py --fem paper_ipm_vshape_1over6.FEM --result-dir results/paper_vshape_1over6_torque_sweep_17p6A_refined --current-rms-a 17.6 --angle-range 135,165,2.5 --torque-groups 1
+
+python .\paper_vshape_torque_angle_sweep.py --fem paper_ipm_vshape_equivalent_1over6.FEM --result-dir results/paper_vshape_equivalent_1over6_torque_sweep_17p6A_refined --current-rms-a 17.6 --angle-range 135,165,2.5 --torque-groups 6-11
+
+Result:
+- Base FEMM best abs torque = 15.9741 Nm at current angle 145 deg.
+- Equivalent FEMM best abs torque = 15.7492 Nm at current angle 147.5 deg.
+- Difference in max torque magnitude is about 1.4%.
+
+Interpretation:
+- Equivalent FEMM is very good for loaded torque/performance despite Br/Bt waveform mismatch.
+- Base vs equivalent no-load airgap field mismatch is expected because magnet geometry is substantially changed:
+  Br L2 about 11.66%, Bt L2 about 37.99%.
+- For performance objective, do not overfit pointwise Br/Bt if torque is the real target.
+
+Analytical-code loaded torque check:
+The first loaded torque sweep above is FEMM base vs FEMM equivalent only. To test code torque, use a Lorentz/winding-function estimate:
+slot force = axial slot current * stack length * no-load Br at the slot, then torque = radius * force.
+This ignores armature reaction, so it is a practical first check rather than a full current-field subdomain model.
+
+Helper:
+- paper5_loaded_torque_from_br.py
+
+Run:
+python .\paper5_loaded_torque_from_br.py --angle-range 0,360,2.5 --result-dir results/paper5_loaded_torque_from_br_full_angle
+
+Output:
+- results/paper5_loaded_torque_from_br_full_angle/loaded_torque_from_br_summary.csv
+- results/paper5_loaded_torque_from_br_full_angle/loaded_torque_from_br_sweep.png
+
+Key numbers:
+- FEMM base no-load Br -> torque estimate = 14.695 Nm.
+- FEMM equivalent no-load Br -> torque estimate = 14.274 Nm.
+- Br-best analytical -> torque estimate = 14.568 Nm.
+- balanced analytical -> torque estimate = 13.371 Nm.
+- S1 diagnostic analytical -> torque estimate = 14.063 Nm.
+
+Interpretation:
+- This is the correct "code loaded torque" comparison currently available.
+- The Br-best analytical result gives about 14.57 Nm, close to the FEMM-Br-based estimate and near the 15-16 Nm loaded FEMM torque level.
+- This supports using the Br-best analytical field for performance-level torque estimate, even though pointwise Bt remains weak.
+- A full analytical loaded torque model would still require armature reaction/current-field subdomain equations.
+
+Radial-shift validation:
+Purpose: test whether the analytical code follows geometry changes, not only the default equivalent model.
+Important: when equivalent_radial_shift_mm changes, FEMM geometry and analytical domains both move. The script passes the same shift into V_shape_equavalent.build_model() and paper5_structure2_solver.build_params().
+
+Helper:
+- paper5_radial_shift_validation.py
+
+Run:
+python .\paper5_radial_shift_validation.py --result-dir results/paper5_radial_shift_validation
+
+Output:
+- results/paper5_radial_shift_validation/radial_shift_validation_summary.csv
+- results/paper5_radial_shift_validation/radial_shift_validation_trends.png
+
+Sweep shifts:
+- 0.7, 1.2, 1.7, 2.2, 2.7 mm
+
+Key results:
+- shift 0.7: Br L2 = 0.1632, FEMM torque estimate = 12.154 Nm, analytical = 13.896 Nm, torque error = +14.3%.
+- shift 1.2: Br L2 = 0.0909, FEMM torque estimate = 13.203 Nm, analytical = 14.232 Nm, torque error = +7.8%.
+- shift 1.7: Br L2 = 0.0465, FEMM torque estimate = 14.274 Nm, analytical = 14.568 Nm, torque error = +2.1%.
+- shift 2.2: Br L2 = 0.0617, FEMM torque estimate = 15.312 Nm, analytical = 14.904 Nm, torque error = -2.7%.
+- shift 2.7: Br L2 = 0.1004, FEMM torque estimate = 16.248 Nm, analytical = 15.242 Nm, torque error = -6.2%.
+
+Interpretation:
+- Analytical torque estimate follows the FEMM trend as the equivalent magnet/domain is shifted outward.
+- The code is not only fitted to one default geometry.
+- It underestimates the slope: analytical Br/torque changes more slowly with radial shift than FEMM.
+- Default shift 1.7 mm remains the best pointwise Br match and a good torque estimate.
+
+Analytical geometry sensitivity update:
+paper5_radial_shift_validation.py now has an optional geometry-only PM-to-airgap permeance scaling:
+gain = (gap_ref / gap) ** p
+where gap = field_evaluation_radius - PM_outer_radius. This is not fitted from the radial-shift sweep. With p=1 it is the first-order inverse-gap response of a simple magnetic circuit. The default is p=0 to preserve old results.
+
+Run:
+python .\paper5_radial_shift_validation.py --gap-permeance-power 1.0 --result-dir results/paper5_radial_shift_validation_gap_p1
+
+Output:
+- results/paper5_radial_shift_validation_gap_p1/radial_shift_validation_summary.csv
+- results/paper5_radial_shift_validation_gap_p1/radial_shift_validation_trends.png
+
+Key results with p=1:
+- shift 0.7: Br L2 = 0.0777, FEMM torque estimate = 12.154 Nm, analytical = 12.831 Nm, torque error = +5.6%.
+- shift 1.2: Br L2 = 0.0534, FEMM torque estimate = 13.203 Nm, analytical = 13.664 Nm, torque error = +3.5%.
+- shift 1.7: Br L2 = 0.0465, FEMM torque estimate = 14.274 Nm, analytical = 14.568 Nm, torque error = +2.1%.
+- shift 2.2: Br L2 = 0.0550, FEMM torque estimate = 15.312 Nm, analytical = 15.550 Nm, torque error = +1.6%.
+- shift 2.7: Br L2 = 0.0716, FEMM torque estimate = 16.248 Nm, analytical = 16.621 Nm, torque error = +2.3%.
+
+Interpretation:
+- The inverse-gap geometry update fixes most of the under-sensitive slope without using a fitted correction table.
+- Default shift 1.7 mm is unchanged because the gain is normalized there.
+- Remaining error is likely from bridge saturation/leakage/effective permeability that still is not modeled explicitly.
+
+Balanced radial-shift validation:
+Purpose: test whether the previous balanced Br/Bt diagnostic also behaves well when equivalent_radial_shift_mm is swept.
+
+Important bug note:
+- results/paper5_radial_shift_validation_balanced_gap_p1 is wrong and should be ignored.
+- The bug was that inverse-gap reference geometry was still the default geometry while alpha_deg=52.25 was used for the balanced case. This caused a false gain of about 0.915 even at shift 1.7 mm.
+- paper5_radial_shift_validation.py was fixed so gap_ref uses the same analytical geometry case as the current run.
+
+Correct run:
+python .\paper5_radial_shift_validation.py --gap-permeance-power 1.0 --alpha-deg 52.25 --slot-params manual --lambda-drop 0.32 --lambda-b-gain 0.14 --width-scale 1.0 --edge-params manual --edge-width-deg 11.5 --edge-bt-gain 0.08 --edge-window-power 1.0 --bt-mode drive --analytical-label analytical_balanced --result-dir results/paper5_radial_shift_validation_balanced_casegap_p1
+
+Output:
+- results/paper5_radial_shift_validation_balanced_casegap_p1/radial_shift_validation_summary.csv
+- results/paper5_radial_shift_validation_balanced_casegap_p1/radial_shift_validation_trends.png
+- results/paper5_radial_shift_validation_balanced_casegap_p1/radial_shift_field_grid.png
+
+Correct balanced case-gap p=1 results:
+- shift 0.7: Br L2 = 0.0650, Bt L2 = 0.2222, FEMM torque estimate = 12.154 Nm, analytical = 11.814 Nm, torque error = -2.8%.
+- shift 1.2: Br L2 = 0.0768, Bt L2 = 0.2187, FEMM torque estimate = 13.203 Nm, analytical = 12.564 Nm, torque error = -4.8%.
+- shift 1.7: Br L2 = 0.0929, Bt L2 = 0.2234, FEMM torque estimate = 14.274 Nm, analytical = 13.371 Nm, torque error = -6.3%.
+- shift 2.2: Br L2 = 0.1083, Bt L2 = 0.2444, FEMM torque estimate = 15.312 Nm, analytical = 14.243 Nm, torque error = -7.0%.
+- shift 2.7: Br L2 = 0.1219, Bt L2 = 0.2809, FEMM torque estimate = 16.248 Nm, analytical = 15.188 Nm, torque error = -6.5%.
+
+Interpretation:
+- Balanced improves Bt strongly compared with Br-best, but Br gets worse and the torque estimate is consistently lower.
+- For torque/performance, keep Br-best gap p=1 as the main baseline.
+- Keep balanced case-gap p=1 as a useful diagnostic/PINN target for tangential field behavior, not as the current torque baseline.
+
+Paper bridge permeability / mu note:
+- The paper title says bridge nonlinearity is considered through MEC/equivalent magnetic-bridge permeability.
+- I have not confirmed from readable local PDF text that the paper states "mu=28 is better" as a universal setting.
+- If the paper/table shows mu around 28, treat it as the author's case-specific bridge permeability or MEC result, not a general constant for this model.
+- User's FEMM bridge samples for the current equivalent model are much lower: outer bridges about 14.3-14.6 and center bridge about 9.59, so blindly using mu=28 here would likely overestimate bridge permeability unless a new FEMM sample justifies it.
+
+Closed-form slotting parameters used in analytical-only version:
+- airgap = 1.2 mm
+- slot opening = 2.0 mm
+- slot top depth = 0.8 mm
+- slot pitch = 6.981 mm
+- slot centers = 5, 15, 25, 35, 45, 55 deg
+- lambda_drop = 0.2941176471
+- lambda_b_gain = 0.1131221719
+- width_scale = 0.7773155097
+
+Best tuned/diagnostic version:
+This version uses FEMM only to tune or choose parameters, so it is less clean but closer.
+
+Structure 2 with alpha_deg=52 + geometry slotting:
+python .\paper5_structure2_solver.py --theta-offset-deg 30 --n-harmonics 7 --m-harmonics 7 --k-harmonics 7 --alpha-deg 52 --result-dir results/paper5_structure2_alpha52_offset30_h7
+
+python .\paper5_slotting_geometry_model.py --result-dir results/paper5_slotting_geometry_alpha52
+
+python .\paper5_current_best_report.py --result-dir results/paper5_current_best_alpha52_geometry_slot --subdomain results/paper5_structure2_alpha52_offset30_h7/structure2_br_bt.csv --corrected results/paper5_slotting_geometry_alpha52/geometry_slotting_br_bt.csv --corrected-label "subdomain + geometry slotting"
+
+Tuned result:
+- Br L2 = 0.1003
+- Bt L2 = 0.3713
+
+Alternative alpha_deg=53:
+- Br L2 = 0.0955
+- Bt L2 = 0.3890
+- Better Br, slightly worse Bt.
+
+Current technical conclusion:
+- Structure 2 dominates and is enough to get a useful Br waveform.
+- Slotting geometry-only now creates correct tooth/slot ripple positions without deriving lambda from FEMM field.
+- Remaining major error is Bt and sector-edge behavior.
+- Structure 1 is not currently reliable; when added/fitted, it either needs nonphysical scaling or damages the middle region.
+- Br-best gap p=1 now gives the best torque trend over radial-shift sweep; balanced gives better Bt but worse torque.
+- Next high-value work: use Br-best analytical as physics baseline, then use PINN/inverse PINN or an explicit nonlinear bridge/leakage model to learn the remaining Bt/edge/saturation residual.
+
+Future PINN direction:
+- Treat the current Br-best no-load subdomain/semi-analytical model as the physics baseline.
+- Use inverse PINN/PINN to learn residual terms for Bt, pole-edge behavior, bridge saturation/leakage, and later loaded armature-reaction effects.
+- Do not replace the subdomain model with a black-box network; use PINN as a residual/surrogate layer on top of the analytical baseline.
+
+Suggested result folders to keep:
+- results/paper_vshape_equivalent_1over6
+- results/paper5_slotless_equivalent_1over6
+- results/paper5_geometry_audit
+- results/paper5_analytical_only_structure2_default_h7
+- results/paper5_analytical_only_slotting_closed_form_default_h7
+- results/paper5_analytical_only_slotting_closed_form_default_h7_compare
+- results/paper5_analytical_only_closed_form_report
+- results/paper5_structure2_alpha52_offset30_h7
+- results/paper5_slotting_geometry_alpha52
+- results/paper5_current_best_alpha52_geometry_slot
+- results/paper5_harmonic_audit_current
+- results/paper5_radial_shift_validation_gap_p1
+- results/paper5_radial_shift_validation_balanced_casegap_p1
+- results/paper5_loaded_torque_from_br_full_angle
+
+Folder to ignore/delete:
+- results/paper5_radial_shift_validation_balanced_gap_p1
+
+Most other tmp_* / old paper5_stage1_* / old paper5_combined_* / old sweep folders can be regenerated and are safe to delete if disk clutter is a problem.

@@ -1,0 +1,1549 @@
+\n===== PAGE 1 =====\nIEEE TRANSACTIONS ON ENERGY CONVERSION, VOL. 37, NO. 2, JUNE 2022 901
+Analytical Model for No-Load Electromagnetic
+Performance Prediction of V -Shape IPM Motors
+Considering Nonlinearity of Magnetic Bridges
+Shiqi Li , Wenming Tong , Member , IEEE, Mingjun Hou, Shengnan Wu , Member , IEEE, and Renyuan Tang
+Abstract—This paper proposes a novel analytical model which
+combines subdomain method and magnetic equivalent circuit
+(MEC) method to predict the no-load performance of V-shape
+interior permanent magnet (IPM) motors with any slot-pole com-
+bination considering the nonlinearity of magnetic bridges (MBs).
+The V-shape magnets are equivalent to the form of distribution
+along radial and tangential directions, and the motor is divided
+into two corresponding structures to facilitate the establishment of
+subdomains. To consider the saturation of MBs, the MEC method
+are employed to obtain the permeability of MBs to establish the
+boundary conditions. The no-load magnetic ﬁeld of slotless motor
+can be obtained by solving the equations established by boundary
+conditions, and the conformal mapping is used to consider the effect
+of slotting. The proposed model can be used to calculate the no-load
+magnetic ﬁeld, back electromotive force, and cogging torque of IPM
+motor . The results are veriﬁed by ﬁnite element analysis (FEA)
+and experiments, which conﬁrms the validity of the model for
+facilitating the motor design and optimization. Compared with
+FEA, the proposed method has the advantages of faster modeling,
+shorter time consuming and meanwhile achieves the approximate
+accuracy. In addition, U-shape motors with MBs can also be ana-
+lyzed by this model.
+Index Terms—Interior permanent magnet motors, subdomain
+method, magnetic equivalent circuit, magnetic bridge.
+I. I NTRODUCTION
+I
+NTERIOR permanent magnet (IPM) motors are used in a
+wide range of industrial applications and smart home due
+to their high-power density, wide speed range, and high reluc-
+tance torque compared with surface-mounted permanent magnet
+(SPM) motors [1]–[3]. Accurate magnetic ﬁeld calculation of
+motors is the premise to predict the electromagnetic performance
+and judge the design rationality [4]. However, due to the complex
+and changeable rotor conﬁgurations of the IPM motors, it is
+Manuscript received February 6, 2021; revised May 11, 2021 and August
+25, 2021; accepted October 17, 2021. Date of publication October 20, 2021;
+date of current version May 20, 2022. This work was supported in part by
+LiaoNing Revitalization Talents Program under Grant XL YC2007107 and in part
+by LiaoNing BaiQianWan Talents Program. (Corresponding author: Wenming
+Tong.)
+The authors are with the National Engineering Research Center for Rare-Earth
+Permanent Magnet Machines, Shenyang University of Technology, Shenyang
+110870, China (e-mail: 18840659110@163.com; twm822@126.com;
+hmj104107@163.com; imwushengnan@163.com; sgdtds@sina.com).
+Color versions of one or more ﬁgures in this article are available at
+https://doi.org/10.1109/TEC.2021.3121438.
+Digital Object Identiﬁer 10.1109/TEC.2021.3121438
+difﬁcult to directly calculate the magnetic ﬁeld distribution by a
+general analytical model, which is not conducive to the design
+and optimization of the IPM motors. Finite element analysis
+(FEA) is powerful enough to accurately predict the magnetic
+ﬁeld distribution of IPM motors. However, it is time-consuming
+in the initial design stage due to the diversity of rotor conﬁg-
+urations and need for high-precision mesh generation [5]–[6].
+The analytical method is an efﬁcient tool for obtaining the mag-
+netic ﬁeld distribution quickly and accurately. Several analytical
+methods for the prediction of magnetic ﬁeld distribution in
+permanent magnet motors have been derived, such as subdomain
+method based on the Laplace-Poisson equations [7]–[13], mag-
+netic equivalent circuit (MEC) method based on the ﬂux tube
+theory [14]–[20], and analytical method based on the winding
+function [21]–[22].
+The subdomain method is a method to solve the ﬁeld gov-
+erning equations of each subdomain by the boundary conditions
+between different subdomains. In 1993, Z. Q. Zhu proposed
+this method to calculate the magnetic ﬁeld distribution of SPM
+motors in [7], [8]. Based on the subdomain method, the magnetic
+ﬁeld distribution of axial ﬂux permanent magnet (AFPM) motors
+is calculated in [9]. Considering the changes in boundary condi-
+tions caused by changes of rotor conﬁguration in IPM motors,
+references [10]–[13] calculate the open-circuit magnetic ﬁeld
+distribution of surface inset permanent magnet motor, V -shape
+IPM motor, U-shape IPM motor, and spoke-type permanent
+magnet (STPM) motor.
+However, the subdomain method mentioned above ignore
+the inﬂuence of core saturation, which will cause errors in the
+calculated magnetic ﬁeld distribution, especially for the IPM
+motors with severely saturated magnetic bridges (MBs). The
+MEC method is adopted by some researchers to consider the
+inﬂuence of core saturation. The three-dimensional MEC is
+used to obtain the magnetic ﬁeld distribution of a linear motor
+in [14]; reference [15] uses the quasi-three-dimensional MEC
+to calculate the magnetic ﬁeld distribution of AFPM motors;
+and the magnetic ﬁeld distribution of IPM motors is calculated
+by MEC method in [16]–[20]. However, the accuracy of MEC
+method depends on the number of nodes. Too many nodes will
+increase the calculation time and make the calculation more
+complicated. In addition, the connection relationship of each
+node in the air-gap needs to be reset at different times due to the
+change of the relative position between stator and rotor, which
+0885-8969 © 2021 IEEE. Personal use is permitted, but republication/redistribution requires IEEE permission.
+See https://www.ieee.org/publications/rights/index.html for more information.
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 2 =====\n902 IEEE TRANSACTIONS ON ENERGY CONVERSION, VOL. 37, NO. 2, JUNE 2022
+will further complicate the calculation. The winding function
+and MEC method are combined in [21], [22] to calculate the
+armature magnetic ﬁeld distribution of IPM motors considering
+the saturation of core, but the method can only obtain the radial
+ﬂux density of the motors, but cannot calculate the tangential air
+gap ﬂux density.
+In order to balance the calculation accuracy and time of the
+magnetic ﬁeld distribution for IPM motors, references [23]–[25]
+propose an improved subdomain model to predict the air-gap
+magnetic ﬁeld of STPM motors considering the saturation of
+MBs. However, this method is only suitable for STPM motors,
+and not suitable for other types of IPM motors due to the
+change of boundary conditions. At the same time, there are
+few articles that use subdomain method to calculate the air-gap
+magnetic ﬁeld for other types of IPM motors considering the
+saturation of core. This paper proposes a general analytical
+model which combines subdomain method and MEC method
+to predict the no-load performance of V -shape IPM motors with
+any slot-pole combination considering the nonlinearity of MBs.
+The distinctions between the paper and previous work are as
+follows.
+a) The V -shape permanent magnets (PMs) is equivalent to
+the form of distribution along the radial and tangential
+directions to facilitate the establishment of subdomains.
+This equivalence provides ideas for the analytical deriva-
+tion of other types of IPM motors with irregular magnets
+arrangement.
+b) The bridge subdomain of V -shape IPM motor is estab-
+lished to make the magnetic ﬁeld distribution more accu-
+rate, in which the permeability of bridges can be obtained
+by MEC method.
+c) The proposed analytical model can be extended to U-shape
+IPM motors with MBs.
+II. T HE ASSUMPTIONS AND FRAMEWORK OF THE PAPER
+The following assumptions are made in the investigation.
+1) The PMs have linear demagnetization characteristics.
+2) Ignore the effects of stator and rotor saturation (except for
+the MBs).
+3) The end effect is ignored.
+This paper is organized as follows. In Section III, the topology
+and equivalent process of the V -shape IPM motor are introduced.
+In Section IV, the analysis method of the equivalent model is
+presented. Afterwards, the results calculated by the proposed
+method are then compared with FEA and experiments in Sec-
+tion V. Conclusions are drawn at the end of the paper.
+III. M OTOR TOPOLOGY AND EQUIV ALENTPROCESS
+The topology of the V -shape IPM motor and its equivalent
+schematic diagram is shown in Fig. 1. As shown in Fig. 1, the
+model is established in r-θcoordinate system. It is stipulated
+that counterclockwise direction is the positive direction of motor
+rotation.
+The main geometric parameters are as follows: Rs, the inner
+radius of stator core; Rr, the outer radius of rotor core; hm/lm,
+the thickness/width of PMs; hb1/wb1, the length/width of MBs;
+Fig. 1. Topology of V -shape IPM motor and its equivalent schematic diagram.
+(a) Topology of original V -shape IPM motor. (b) Topology after equivalence.
+hb2/wb2, the length/width of air area between PMs;wb, the width
+of air area between magnets and MBs;β, the span of PMs;α/α1,
+the span of PMs distributed along radial/tangential direction
+after equivalence; Rm/Rf, inner/outer radius of PMs distributed
+along tangential direction after equivalence;lx, the width of PMs
+distributed along radial direction after equivalence.
+The speciﬁc equivalent process is as follows. Firstly, the
+thickness and span of each magnet should remain unchanged
+before and after the equivalence. Then, according to the principle
+that the total ﬂux produced by the magnets does not change, the
+following equation can be established.
+2lm =2 lx +α1Rf −wb2 (1)
+lx = Rr −Rf −wb1 −wb (2)
+α1 = β−2α= β−2[hm/(Rf +lx)] (3)
+Finally, combining the above equations, Rf and Rm can be
+expressed as follows.
+Rf =( Rr −lm −wb1 −wb −wb2/2)/(1−α1/2) (4)
+Rm = Rf −hm (5)
+After the equivalence, the original IPM motor is divided into
+two corresponding structures, that is, motors with magnets dis-
+tributed along radial direction (named Structure 1) and tangential
+direction (named Structure 2), as shown in Fig. 2, where α2 is
+the span of air area between magnets and MBs, γis the span of
+saturation area in MBs and can be expressed in (7) according
+to [23].
+α2 = hb1/(Rr −wb1) (6)
+γ= α2 +2wb1/Rr (7)
+It should be noted that the permeability of MBs in the motor
+with Structure 1 or 2 is the same as that of the original V -shape
+motor, which can be calculated by MEC method and iterative
+method. Ignoring the slotting of stator, the MEC of original
+V -shape motor is shown in Fig. 3, where Gm, Gas1, Gas2, Gb,
+and Gg are the equivalent permeance of magnet, air area between
+magnets and MBs, air area between PMs, MBs, and air-gap of the
+V -shape motor;ϕm,ϕas1,ϕas2,ϕb, and ϕg are the ﬂux of each
+branch; ϕr is total ﬂux produced by magnets. The equivalent
+permeance and ﬂux can be calculated according to [26].
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 3 =====\nLI et al.: ANALYTICAL MODEL FOR NO-LOAD ELECTROMAGNETIC PERFORMANCE PREDICTION OF V -SHAPE 903
+Fig. 2. Schematic diagram of the motor after equivalent under a pair of poles.
+Fig. 3. MEC of the original V -shape IPM motor.
+Fig. 4. Flow chart of the iterative method for the calculation of permeability.
+The iterative method is employed to obtain the permeability
+of MBs. Firstly, the initial permeability of bridge is supposed
+as μb0, and all the equivalent permeance and ﬂux in MEC can
+be obtained based on the B-H curve of core. Then, the new
+permeability of MB ( μb1) is calculated by solving the MEC.
+Check the error e(μb)o f μb1 and μb0, and adjust the initial
+permeability μb0. Eventually, repeat the process until the error
+is satisﬁed, and obtain the exact permeability of MBs. The
+calculation process is shown in Fig. 4.
+Fig. 5. Simpliﬁed model of the motor with Structure 1.
+After obtaining the permeability of MBs, the subdomain
+method is used to obtain the magnetic ﬁeld distribution of the
+two structures of motors considering the saturation of MBs.
+The synthetic magnetic ﬁeld can be calculated according to
+superposition principle, and the speciﬁc process is as follows.
+IV . ANALYTICAL MODEL
+A. Establishment of Subdomains for Motor With Structure 1
+As can be seen from Fig. 2(a), the magnetization direc-
+tion of adjacent magnets are the same. In order to facilitate
+the establishment of subdomains, the following simpliﬁcations
+are made: the magnets with same polarity are combined into
+a whole magnet with the span of π/p-β+2αby replacing the
+rotor core between PMs with magnets; and the width of magnets
+in the radial direction is set to lx+wb, ignoring the air area
+between magnet and MBs. The slotting effect is neglected and
+the impact of model simpliﬁcation and slotting on the calculated
+ﬁeld distribution will be revised later. The simpliﬁed model is
+shown in Fig. 5, where α
+′
+and γ
+′
+are the span of magnet and
+saturation area of MBs in the simpliﬁed model respectively,
+which can be expressed as
+α′ =2 α+π/p−β (8)
+γ′ = α′ +wb1/Rr (9)
+It can be seen from Fig. 5 that the motor is divided into 4
+subdomains: air slot (I), PM (II), MBs (III) and air-gap (IV). In
+subdomain I, III and IV , the vector potential A is governed by
+∂2A
+∂r2 + 1
+r
+∂A
+∂r+ 1
+r2
+∂2A
+∂θ2 =0 (10)
+and in subdomain II, the vector potential A is governed by
+∂2A
+∂r2 + 1
+r
+∂A
+∂r+ 1
+r2
+∂2A
+∂θ2 = −μ0
+M
+r (11)
+where μ0 is the permeability of air; M is the residual magneti-
+zation vector of magnets and can be expressed as
+M =( −1)iBrem/μ0 (12)
+where Brem is the remanence of magnets; i represents the ith
+magnet and equal to 1, 2, … 2 p, as shown in Fig. 2, in which p
+is the number of pole-pairs. Taking the periodicity and symmetry
+of the model into account, the general solution of vector potential
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 4 =====\n904 IEEE TRANSACTIONS ON ENERGY CONVERSION, VOL. 37, NO. 2, JUNE 2022
+in each subdomain can be expressed as [23]
+AI(r,θ)=
+∑
+n
+A1n
+( r
+Rf
+)np
+sin(npθ) (13)
+AII(r,θ)= A02 +B02 ln(r)+ Bremr
++
+∑
+k
+[
+A2k
+( r
+Rf
+)kπ
+α′
++B2k
+( r
+Rr −wb1
+)−kπ
+α′
+]
+cos
+[kπ
+α′
+(
+θ− π
+2p + α′
+2
+)]
+(14)
+AIII (r,θ)= A03 +B03 ln(r)
++
+∑
+g
+[
+A3g
+( r
+Rr −wb1
+)gπ
+γ′
++B3g
+( r
+Rr
+)−gπ
+γ′
+]
+cos
+[gπ
+γ′
+(
+θ− π
+2p + γ′
+2
+)]
+(15)
+AIV (r,θ)=
+∑
+n
+[
+A4n
+( r
+Rr
+)np
++B4n
+( r
+Rs
+)−np]
+sin(npθ)
+(16)
+where n, k, and g are the harmonic orders of different subdo-
+mains; A1n, A02, B02, A2k, B2k, A03, B03, A3g, B3, A4n, and B4n
+are the undetermined coefﬁcients.
+In the interface between different subdomains, the vector po-
+tential A, radial ﬂux density Br and tangential magnetic intensity
+Hθare continuous. Therefore the boundary conditions between
+subdomain I and II at Rf are
+⎧
+⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎩
+AI(Rf,θ)= AII(Rf,θ),θi+ π
+2p−α′
+2 ≤θ≤θi+ π
+2p+α′
+2
+BIr(Rf,θ)= BIIr (Rf,θ),θi+ π
+2p−α′
+2 ≤θ≤θi+ π
+2p+α′
+2
+HIθ(Rf,θ)= HIIθ(Rf,θ),θi+ π
+2p−α′
+2 ≤θ≤θi+ π
+2p+α′
+2
+(17)
+whereθi is the angular position of ith magnet, and it is speciﬁed
+that it is N pole when i is equal to 1, corresponding toθ= 0. The
+boundary conditions between subdomain II and III atRr-wb1 are
+⎧
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎩
+AII(Rr −wb1,θ)= AIII (Rr −wb1,θ),
+θi + π
+2p −α′
+2 ≤θ≤θi + π
+2p + α′
+2
+BIIr (Rr −wb1,θ)= BIIIr (Rr −wb1,θ),
+θi + π
+2p −α′
+2 ≤θ≤θi + π
+2p + α′
+2
+HIIθ(Rr −wb1,θ)= HIIIθ(Rr −wb1,θ),
+θi + π
+2p −α′
+2 ≤θ≤θi + π
+2p + α′
+2
+(18)
+Fig. 6. MEC of the motor with Structure 1. (a) before simpliﬁcation. (b) after
+simpliﬁcation.
+Boundary conditions between subdomain III and IV at Rr are
+⎧
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎩
+AIII (Rr,θ)= AIV (Rr,θ),θi + π
+2p −γ′
+2 ≤θ≤θi
++ π
+2p + γ′
+2
+BIIIr (Rr,θ)= BIVr (Rr,θ),θi + π
+2p −γ′
+2 ≤θ≤θi
++ π
+2p + γ′
+2
+HIIIθ(Rr,θ)= HIVθ(Rr,θ),θi + π
+2p −γ′
+2 ≤θ≤θi
++ π
+2p + γ′
+2
+(19)
+The boundary condition of subdomain IV at Rs are
+HIVθ(Rs,θ)=0 (20)
+According to the Fourier series expansion, the equations
+with undetermined coefﬁcients can be obtained from the above
+boundary conditions, which will be given in the appendix.
+During the equations solving process, the permeability of MBs
+will change due to the simpliﬁcation of model, which is different
+from the original V -shape motor. The permeability of MBs in the
+simpliﬁed motor with Structure 1 can also be obtained by MEC
+method and iterative method, where the MEC of the motor with
+Structure 1 is shown in Fig. 6, and the meaning of each parameter
+is the same as that in Fig. 3.
+After obtaining the undetermined coefﬁcients, the analytical
+formulation of the radial and tangential no-load air-gap magnetic
+ﬁeld distribution of the simpliﬁed motor with Structure 1 can be
+expressed as
+BIVr =
+∑
+n
+[
+npA4n
+r
+( r
+Rr
+)np
++npB4n
+r
+( r
+Rs
+)−np]
+cos(npθ)
+(21)
+BIVθ = −
+∑
+n
+[
+npA4n
+Rr
+( r
+Rr
+)np−1
+−npB4n
+Rs
+( r
+Rs
+)−np−1]
+×sin(npθ) (22)
+In order to consider the inﬂuence of model simpliﬁcation
+on the magnetic ﬁeld distribution, the results of (21) and (22)
+need to be revised. On the one hand, the total ﬂux and leakage
+ﬂux will change after changing the span and width of PM, and
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 5 =====\nLI et al.: ANALYTICAL MODEL FOR NO-LOAD ELECTROMAGNETIC PERFORMANCE PREDICTION OF V -SHAPE 905
+its inﬂuence on the amplitude of air-gap ﬂux density can be
+corrected by (23), whereϕg1 andϕg1’ can be obtained by solving
+the MEC shown in Fig. 6. It should be noted that the permeability
+of bridge in Fig. 6(a) is the same as that in Fig. 3.
+K mod = ϕg1/ϕ′
+g1 (23)
+On the other hand, considering the existence of non-saturated
+core between adjacent magnets, the ﬂux path is different due
+to the permeability of non-saturated core is much greater than
+that of bridge and air, which will affect the distribution of air-
+gap magnetic ﬁeld. Considering the effect of non-saturated core,
+assume that the radial air gap ﬂux density at the corresponding
+position of bridge changes linearly, the radial and tangential
+air-gap magnetic ﬁeld distribution can be corrected as:
+BIVr mod
+=
+⎧
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎩
+BIVr when |θ−θi|≤ α1 +α−γ
+2
+(−1)i+1|BIVr |max
+γ [θ−(θi −α1 +α+γ
+2 )]
+when θi −α1 +α+γ
+2 ≤θ≤θi −α1 +α−γ
+2
+(−1)i|BIVr |max
+γ [θ−(θi + α1 +α+γ
+2 )]
+when θi + α1 +α−γ
+2 ≤θ≤θi + α1 +α+γ
+2
+0 else where
+(24)
+BIVθ mod =
+⎧
+⎨
+⎩
+BIVθ when |θ−θi|≤ α1 +α+γ
+2
+0 elsewhere
+(25)
+Based on the above analysis, the radial and tangential no-load
+air-gap magnetic ﬁeld distribution of the original motor with
+Structure 1 can be expressed as
+B′
+IVr = BIVr mod K mod (26)
+B′
+IVθ = BIVθ mod K mod (27)
+B. Establishment of Subdomains for Motor With Structure 2
+As can be seen from Fig. 2(b), the model is symmetrical
+along θi, so the subdomains can be established in the interval
+of [ θi, θi+π/2p]. In order to facilitate the establishment of
+subdomains, the following simpliﬁcations are made: the MB
+is ignored and the span of air area is changed to γ, and at the
+same time, the the span of magnet in tangential direction is
+extended to ( α+α1+γ)/2. The simpliﬁed model of the motor
+with Structure 2 is shown in Fig. 7. The stator slotting is
+neglected and the impact of model simpliﬁcation and slotting
+on the calculated ﬁeld distribution will be revised later.
+At this time, the model is divided into 3 subdomains: air-gap
+(V), air slot (VI), and magnet (VII). The general solution of
+vector potential in each subdomain can be expressed as [12]
+AV (r,θ)=
+∑
+n
+[
+A5n
+( r
+Rs
+)np
++B5n
+( r
+Rr
+)−np]
+sin(npθ)
+(28)
+Fig. 7. Simpliﬁed model of the motor with Structure 2.
+AVI (r,θ)= A06 +B06 ln(r)
++
+∑
+m
+[
+A6m
+( r
+Rr
+) 2mπ
+γ
++B6m
+( r
+Rf
+)−2mπ
+γ
+]
+×cos
+[2mπ
+γ
+(
+θ−α1 +α
+2
+)]
+(29)
+AVII (r,θ)=
+∑
+k
+[
+A7k
+( r
+Rf
+) (2k+1)π
+α1+α+γ
++B7k
+( r
+Rm
+)−(2k+1)π
+α1+α+γ
+−(−1)kr 4Brem (α1 +α+γ)
+(2k +1) 2π2 −(α1 +α+γ)2
+]
+×sin
+[ (2k +1)π
+α1 +α+γθ
+]
+(30)
+where n, m, k are the harmonic orders of different subdomains;
+A5n, B5n, A06, B06, A6m, B6m, A7k, and B7k are the undetermined
+coefﬁcients.
+In the interface between different subdomains, the vector
+potential A, radial ﬂux density Br and tangential magnetic in-
+tensity Hθare continuous, respectively. Therefore the boundary
+conditions between subdomain V and VI at Rr are
+⎧
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎪⎩
+AV (Rr,θ)= AVI (Rr,θ),θi + α+α1 −γ
+2 ≤θ≤θi
++α+α1 +γ
+2
+BVr (Rr,θ)= BVIr (Rr,θ),θi + α+α1 −γ
+2 ≤θ≤θi
++α+α1 +γ
+2
+HVθ(Rr,θ)= HVIθ(Rr,θ),θi + α+α1 −γ
+2 ≤θ≤θi
++α+α1 +γ
+2 (31)
+Boundary conditions between subdomain VI and VII atRf are
+⎧
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎨
+⎪⎪⎪⎪⎪⎪⎪⎪⎪⎩
+AVI (Rf,θ)= AVII (Rf,θ),
+θi + α+α1 −γ
+2 ≤θ≤θi + α+α1 +γ
+2
+BVIr (Rf,θ)= BVIIr (Rf,θ),
+θi + α+α1 −γ
+2 ≤θ≤θi + α+α1 +γ
+2
+HVIθ(Rf,θ)= HVIIθ(Rf,θ),
+θi + α+α1 −γ
+2 ≤θ≤θi + α+α1 +γ
+2
+(32)
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 6 =====\n906 IEEE TRANSACTIONS ON ENERGY CONVERSION, VOL. 37, NO. 2, JUNE 2022
+Fig. 8. MEC of the motor with Structure 2. (a) Before simpliﬁcation. (b) After
+simpliﬁcation.
+The boundary condition of subdomain V at Rs is
+HVθ(Rs,θ)=0 (33)
+The boundary condition of subdomain VII at Rm is
+HVIIθ(Rm,θ)=0 ,θi ≤θ≤θi + α1 +α+γ
+2 (34)
+According to the Fourier series expansion, the equations
+with undetermined coefﬁcients can be obtained from the above
+boundary conditions, which will be given in the appendix. After
+obtaining the coefﬁcients, the analytical formulation of the radial
+and tangential no-load air-gap magnetic ﬁeld distribution of the
+simpliﬁed motor with Structure 2 can be expressed as
+BVr =
+∑
+n
+[
+npA5n
+r
+( r
+Rs
+)np
++ npB5n
+r
+( r
+Rr
+)−np]
+cos(npθ)
+(35)
+BVθ = −
+∑
+n
+[
+npA5n
+Rs
+( r
+Rs
+)np−1
+−npB5n
+Rr
+( r
+Rr
+)−np−1]
+×sin(npθ) (36)
+In order to consider the inﬂuence of model simpliﬁcation on
+the no-load air-gap magnetic ﬁeld distribution, the results of (35)
+and (36) need to be revised. On the one hand, the total ﬂux and
+leakage ﬂux will change after ignoring the bridge and increasing
+the span of magnet, and its inﬂuence on the amplitude of air-gap
+ﬂux density can be corrected by (37), where ϕg2 and ϕg2’ can
+be obtained by solving the MEC shown in Fig. 8. It should be
+noted that the permeability of bridge in Fig. 8(a) is the same as
+that in Fig. 3.
+K′
+mod = ϕg2/ϕg2
+′ (37)
+On the other hand, considering the existence of highly sat-
+urated bridge in Fig. 2(b), almost all of the ﬂux enters air-gap
+through the non-saturated rotor core with the interval of [ θi-
+(α+α1-γ)/2, θi+(α+α1-γ)/2]. Since the span of the saturation
+area of bridge, that isγ, affects the interval of non-saturated core,
+so the no-load air-gap magnetic ﬁeld distribution mainly depends
+on the span of saturation area of bridges. For the simpliﬁed model
+in Fig. 7, the span of air area is set to γ, which is consistent with
+the span of saturation area of bridges in the original model,
+so that the ﬂux enters air-gap through the non-saturated rotor
+core with a span of α+α1-γ, making the air-gap magnetic ﬁeld
+distribution is the same as that in Fig. 2(b).
+Based on the above analysis, the radial and tangential no-load
+air-gap magnetic ﬁeld distribution of the original motor with
+Structure 2 can be expressed as
+B′
+Vr = BVr K′
+mod (38)
+B′
+Vθ = BVθK′
+mod (39)
+C. Effect of Slotting
+The no-load air-gap magnetic ﬁeld distribution of slotless
+V -shape IPM motor can be obtained by superposing the ﬁeld
+distribution of motors with Structure 1 and 2, which can be
+expressed as
+Br = B′
+IVr +B′
+Vr (40)
+Bθ= B′
+IVθ +B′
+Vθ (41)
+The conformal mapping method is adopted to consider the
+slotting effect in this paper. The main idea of the method is to
+transform the actual slotted air-gap into a slotless air-gap using
+several conformal transformations, and the complex relative air-
+gap permeance can be obtained to represent the effect of slotting
+[27]. Then the radial and tangential components of the air-gap
+magnetic ﬁeld of slotted motor can be described as
+Bslot_r = Br λa +Bθλb (42)
+Bslot_θ= Bθλa −Br λb (43)
+where λa and λb are the real and imaginary parts of complex
+relative air-gap permeance, respectively.
+D. No-load Electromagnetic Performance Prediction
+The no-load back electromotive force (EMF) of the motor can
+be obtained according to the distribution of ﬂux linkage
+E = −dψ
+dt (44)
+whereψis the phase ﬂux linkage and can be calculated by
+ψ= NΦ= N
+∫
+Bslot_rdS (45)
+where N is the number of turns per phase in series; Φis the
+phase ﬂux, which can be obtained from the radial no-load air-gap
+magnetic ﬁeld distribution. The cogging torque of the IPM motor
+can be expressed as
+Tcog = Lar2
+μ0
+∫
+Bslot_rBslot_θdθ (46)
+where La is the stack length of the motor.
+V. C ALCULA TIONRESULTS AND VERIFICA TION
+To validate the feasibility of the proposed model, the no-load
+electromagnetic performance of an 8-pole/48-slot V -shape IPM
+motor are calculated and tested. The conﬁguration of the motor
+is shown in Fig. 9, and the main parameters are listed in Table I,
+in which the nonlinear B-H curve of the core is shown in Fig. 10.
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 7 =====\nLI et al.: ANALYTICAL MODEL FOR NO-LOAD ELECTROMAGNETIC PERFORMANCE PREDICTION OF V -SHAPE 907
+Fig. 9. Conﬁguration of the motor. (a) Stator core with windings. (b) Rotor
+core.
+TABLE I
+MAIN PARAMETERS OF THE IPM MOTOR
+Fig. 10. Nonlinear B-H curve of core material.
+It should be noted that the prototype not only has MBs between
+magnets and the outer boundary of rotor core, but also has MBs
+between the magnet segments with same polarity. Therefore,
+in order to consider the inﬂuence of the MBs between the
+magnet segments with same polarity in the analytical calculation
+process, it is necessary to add an additional branch to the MEC
+shown in Fig. 8.
+A. Magnetic Field Distribution in the Air-Gap
+The radial and tangential no-load air-gap magnetic ﬁeld dis-
+tribution of the prototype obtained by FEA and the proposed
+analytical method are shown in Fig. 11. In order to quantify
+the coincidence degree of the no-load air-gap magnetic ﬁeld
+distribution calculated by the two methods, the coefﬁcient of
+determination is used in this paper.
+The calculated determination coefﬁcients of radial and tan-
+gential air-gap magnetic ﬁeld distribution are 0.98 and 0.79,
+respectively. On the one hand, the error is caused by the dis-
+tortion of air-gap ﬁeld due to deformations in the circular path
+when the slotless domain is mapped to the slotted domain in
+Fig. 11. Radial and tangential no-load air-gap magnetic ﬁeld distribution.
+Fig. 12. Phase ﬂux linkage and line back EMF of the IPM motor under no-load
+condition. (a) Phase ﬂux linkage waveform. (b) Line back EMF waveform.
+the conformal mapping; on the other hand, the harmonics of
+the resultant air-gap ﬁeld obtained by superimposing the ﬁeld of
+motors with Structure 1 and 2 will also produce errors compared
+with the FEA. Another reason is that the saturation degree at
+the bridge is considered to be uniform in the modeling process,
+which is different from the actual situation, which will also bring
+calculation errors.
+B. Flux Linkage and No-Load Back EMF
+Fig. 12(a) shows the comparison of the calculated A-phase
+ﬂux linkage obtained by the proposed method and FEA. The
+calculated determination coefﬁcient of ﬂux linkage is 0.98,
+indicating that the calculated results are in good agreement.
+The no-load line back EMF of the IPM motor at rated speed
+is tested, and the results are compared with FEA and proposed
+method, as shown in Fig. 12(b), in which the calculated de-
+termination coefﬁcient is 0.96. The harmonic analysis of the
+back EMF waveforms is shown in Fig. 13, in which that the
+fundamental amplitudes of the no-load back EMF obtained
+by FEA, proposed method and experimental test are 168.7V ,
+172.7V , and 166.9V , respectively. And the corresponding THD
+are 5.73%, 6.11% and 6.84%, respectively. It can be seen that
+the proposed method can accurately calculate the no-load back
+EMF of the motor.
+C. Cogging Torque Calculation
+The cogging torque of the IPM motor under one tooth pitch
+calculated by the proposed analytical model is compared with
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 8 =====\n908 IEEE TRANSACTIONS ON ENERGY CONVERSION, VOL. 37, NO. 2, JUNE 2022
+Fig. 13. Harmonic analysis of back EMF waveforms.
+Fig. 14. Cogging torque of the IPM motor.
+the FEA, as shown in Fig. 14, in which the calculated deter-
+mination coefﬁcient is 0.97. It is observed that the cogging
+torque waveform calculated by the proposed model and FEA has
+the same variation trend, but the error also exists. The error of
+cogging torque is caused by the error of no-load air-gap magnetic
+ﬁeld distribution. It can be seen from Fig. 14 that the amplitude of
+cogging torque calculated by FEA is 0.75N·m, while it is 0.7N·m
+for the proposed model. The calculation error of the amplitude
+of cogging torque is 6.7%, which is within the allowable range
+of the engineering. Although there are errors in the calculated
+cogging torque amplitude, the model can still predict the change
+trend of cogging torque waveforms of the motors, which shows
+that the model still has certain practicality for optimizing the
+motors.
+D. Applicable Conditions of the Model
+The model shown in Fig. 5 assumes that the ﬂux lines all
+enter the boundary of MBs along normal direction. However,
+as the degree of saturation of MBs increases, the direction of
+the ﬂux line will change, the assumption of /2202A//2202θ= 0 will
+produce errors. In order to analyze the effect of MBs saturation
+on the ﬁeld distribution of the motor, and obtain the applicable
+conditions of the model, a sensitivity analysis is performed.
+In this paper, the difference in the degree of saturation of MBs
+is reﬂected by the difference in relative permeability. The com-
+parison of air-gap ﬂux density calculated by FEA and analytical
+model under different relative permeability of MBs is shown in
+Table II, where μrb and Bb represent the relative permeability
+TABLE II
+COMPARISON OF AIR-GAP FLUX DENSITY CALCULA TEDBY FEA AND
+ANALYTICAL MODEL UNDER DIFFERENT RELA TIVEPERMEABILITY OF MBS
+and ﬂux density of MBs; Br and Bθrepresent the amplitude of
+radial and tangential air-gap ﬂux density; FEA and Ana represent
+the results calculated by FEA and analytical model, e represents
+the calculation error.
+It can be seen that when μrb is larger than 28, the calculation
+results of analytical model are in good agreement with that of
+FEA, in which the errors are less than 5%; the error will become
+larger as μrb continues to decreases. Therefore, for the motor
+relative permeability of bridge is greater than 28 under no-load
+conditions, the proposed model can be used to calculate the
+no-load air-gap magnetic ﬁeld of the motors; when the relative
+permeability is less than 28, the calculation error of the model
+is relatively large.
+E. Computational Time
+The FEA software used in this paper is Ansys EM19.0. In
+order to improve the calculation efﬁciency, 1/8 motor model is
+calculated, and the number of meshes in the model is 8236. The
+solution time of FEA is 124 seconds, and that of the proposed
+method is 18 seconds [Inter Core i5-10400F @ 2.90GHz CPU,
+16.0GB RAM].
+VI. C ONCLUSION
+This paper proposes a novel general analytical model which
+combines the subdomain method and MEC method to predict the
+no-load electromagnetic performance of V -shape IPM motors
+with any slot-pole combination considering the nonlinearity of
+MBs. The V -shape PMs are equivalent to the form of distribu-
+tion along the radial and tangential directions to facilitate the
+establishment of subdomains. In order to consider the saturation
+of the MB, the MEC method and iterative method are employed
+to obtain the permeability of MB to establish the boundary
+conditions. Then, the no-load magnetic ﬁeld can be predicted
+by solving the equations based on boundary conditions and the
+method of conformal mapping is used to consider the effect of
+slotting.
+The results of no-load air-gap magnetic ﬁeld distribution and
+line back EMF calculated by the proposed method are in good
+agreement with FEA and experimental test results. The error
+of amplitude of no-load air-gap ﬂux density and back EMF
+between proposed method and FEA/Test is within 3%. The
+cogging torque calculated by the proposed method has an error
+in the amplitude compared with FEA, but the method can still
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 9 =====\nLI et al.: ANALYTICAL MODEL FOR NO-LOAD ELECTROMAGNETIC PERFORMANCE PREDICTION OF V -SHAPE 909
+predict the variation trend of cogging torque waveforms, which
+shows that the analytical model still has certain practicality for
+optimizing the motor. Meanwhile, the applicable conditions of
+the model is also studied in this paper, the results shows that the
+proposed model is more suitable for the analysis of the motor
+whose relative permeability of MBs is greater than 28 under
+no-load condition.
+Compared with FEA, the proposed model can perform fast
+calculations of no-load electromagnetic performance for V -
+shape IPM motors, which greatly saves time during the design
+and optimization stage. In addition, U-shape IPM motors with
+magnetic bridges can also be analyzed by this model.
+APPENDIX
+A. Equations of Motor With Structure 1
+The following equations can be obtained according to (17)
+A02 +B02 ln(Rf)+ BremRf = 1
+α′
+∑
+n
+A1nΓ1 (47)
+A2k +B2k
+( Rf
+Rr −wb1
+)−kπ
+α′
+= 2
+α′
+∑
+n
+A1nΓ2 (48)
+A1nn
+μ0Rf
+= 2
+πμm
+(B02
+Rf
++Brem
+)
+Γ1 + 2
+πμm
+×
+∑
+k
+[
+A2kkπ
+α′Rf
+− B2kkπ
+α′ (Rr−wb1)
+( Rf
+Rr −wb1
+)−kπ
+α′ −1]
+Γ2
+(49)
+The following equations can be obtained according to (18)
+A03+B03 ln(Rr−wb1)= 1
+γ′
+∑
+k
+[
+A2k
+(Rr−wb1
+Rf
+)kπ
+α′
++B2k
+]
+Γ3
++ α′
+γ′ [A02 +B02 ln(Rr −wb1)+ Brem(Rr −wb1)] (50)
+A3g+B3g
+(Rr−wb1
+Rr
+)−gπ
+γ′
+= 2
+γ′
+∑
+k
+[
+A2k
+(Rr−wb1
+Rf
+)kπ
+α′
++B2k
+]
+Γ5
++ 2
+γ′ [A02 +B02 ln(Rr −wb1)+ Brem (Rr −wb1)]Γ4 (51)
+1
+μm
+( B02
+Rr −wb1
++Brem
+)
+= B03
+μb (Rr −wb1)
++ 1
+α′μb
+∑
+g
+[
+A3ggπ
+γ′ (Rr −wb1) −B3ggπ
+γ′Rr
+(Rr −wb1
+Rr
+)
+−gπ
+γ′ −1
+]
+Γ4
+(52)
+1
+μm
+[
+A2kkπ
+α′Rf
+(Rr −wb1
+Rf
+)kπ
+α′ −1
+− B2kkπ
+α′(Rr −wb1)
+]
+= 2B03Γ3
+μbα′(Rr −wb1) + 2
+α′μb
+×
+∑
+g
+[
+A3ggπ
+γ′
+1
+Rr−wb1
+−B3ggπ
+γ′Rr
+(Rr −wb1
+Rr
+)−gπ
+γ′ −1]
+Γ5
+(53)
+The following equations can be obtained according to (19)
+A03 +B03 ln(Rr)= 1
+γ′
+∑
+n
+[
+A4n +B4n
+(Rr
+Rs
+)−np]
+Γ6
+(54)
+A3g
+( Rr
+Rr −wb1
+)gπ
+γ′
++B3g= 2
+γ′
+∑
+n
+[
+A4n +B4n
+(Rr
+Rs
+)−np]
+Γ7
+(55)
+− 1
+μ0
+[
+nA4n
+Rr
+−nB4n
+Rs
+(Rr
+Rs
+)−np−1]
+= − 2
+μbπ
+B03
+Rr
+Γ6
+− 2
+μbπ
+∑
+g
+[
+A3ggπ
+γ′(Rr −wb1)
+( Rr
+Rr −wb1
+)gπ
+γ′ −1
+−B3ggπ
+γ′Rr
+]
+Γ7
+(56)
+The following equation can be obtained according to (20)
+A4n
+Rr
+(Rs
+Rr
+)np−1
+= B4n
+Rs
+(57)
+where μb and μm are the permeability of bridge and magnet,
+and
+Γ1 =
+∫ π
+2p +α′
+2
+π
+2p−α′
+2
+sin(npθ)dθ (58)
+Γ2 =
+∫ π
+2p +α′
+2
+π
+2p−α′
+2
+cos
+[kπ
+α′
+(
+θ− π
+2p + α′
+2
+)]
+sin(npθ)dθ (59)
+Γ3 =
+∫ π
+2p +α′
+2
+π
+2p−α′
+2
+cos
+[kπ
+α′
+(
+θ− π
+2p + α′
+2
+)]
+dθ (60)
+Γ4 =
+∫ π
+2p +α′
+2
+π
+2p−α′
+2
+cos
+[gπ
+γ′
+(
+θ− π
+2p + γ′
+2
+)]
+dθ (61)
+Γ5 =
+∫ π
+2p +α′
+2
+π
+2p−α′
+2
+cos
+[kπ
+α′
+(
+θ− π
+2p + α′
+2
+)]
+×cos
+[gπ
+γ′
+(
+θ− π
+2p + γ′
+2
+)]
+dθ (62)
+Γ6 =
+∫ π
+2p +γ′
+2
+π
+2p−γ′
+2
+sin(npθ)dθ (63)
+Γ7 =
+∫ π
+2p +γ′
+2
+π
+2p−γ′
+2
+sin(npθ)cos
+[gπ
+γ′
+(
+θ− π
+2p + γ′
+2
+)]
+dθ (64)
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 10 =====\n910 IEEE TRANSACTIONS ON ENERGY CONVERSION, VOL. 37, NO. 2, JUNE 2022
+B. Equations of Motor With Structure 2
+The following equations can be obtained according to (31)
+A06 +B06 ln(Rr)=
+∑
+n
+1
+γ
+[
+A5n
+(Rr
+Rs
+)np
++B5n
+]
+Γ8 (65)
+A6m +B6m
+(Rf
+Rr
+) 2mπ
+α
+=
+∑
+n
+2
+γ
+[
+A5n
+(Rr
+Rs
+)np
++B5n
+]
+Γ9
+(66)
+− n
+μ0
+[
+A5n
+(Rr
+Rs
+)np
+−B5n
+]
+= 2
+πμm
+[(−1)n −1]
+×
+[
+B06Γ8 +
+∑
+m
+2πm
+γ
+[
+A6m −B6m
+(Rf
+Rr
+) 2mπ
+γ
+]
+Γ9
+]
+(67)
+The following equations can be obtained according to (32)
+A06 +B06 ln(Rf)=
+∑
+k
+1
+γ
+[
+A7k +B7k
+(Rm
+Rf
+) (2k+1)π
+α1 +α+γ
+−RfΔk
+]
+Γ10 (68)
+A6m
+(Rf
+Rr
+) 2mπ
+γ
++B6m
+=
+∑
+k
+2
+γ
+[
+A7k +B7k
+(Rm
+Rf
+)π(2k+1)
+α1+α+γ
+−RfΔk
+]
+Γ11 (69)
+1
+μm
+∑
+k
+[A7k(2k +1)π
+α1 +α+γ −B7k(2k +1)π
+α1 +α+γ
+×
+(Rm
+Rf
+) (2k+1)π
+α1 +α+γ
+−RfΔk
+]
+= 4
+μ0(α1 +α+γ) ·
+[
+B06Γ10 +
+∑
+m
+2mπ
+γ
+×
+[
+A6m
+(Rf
+Rr
+) 2mπ
+γ
+−B6m
+]
+Γ11
+]
+(70)
+The following equation can be obtained according to (33)
+A5n
+Rs
+= B5n
+Rr
+(Rs
+Rr
+)−np−1
+(71)
+The following equation can be obtained according to (34)
+(2k +1)π
+α1 +α+γ
+[
+A7k
+Rf
+(Rm
+Rf
+) (2k+1)π
+α1 +α+γ−1
+−B7k
+Rm
+]
+=Δk (72)
+where
+Δk =( −1)k 4Brem(α1 +α+γ)
+(2k +1) 2π2 −(α1 +α+γ)2 (73)
+Γ8 =
+∫ (α1 +α+γ)/2
+(α1 +α−γ)/2
+sin(npθ)dθ (74)
+Γ9 =
+∫ (α1 +α+γ)/2
+(α1 +α−γ)/2
+sin(npθ)cos
+[2mπ
+γ
+(
+θ−α1 +α
+2
+)]
+dθ
+(75)
+Γ10 =
+∫ (α1 +α+γ)/2
+(α1 +α−γ)/2
+sin
+[ (2k +1)π
+α1 +α+γθ
+]
+dθ (76)
+Γ11 =
+∫ (α1 +α+γ)/2
+(α1 +α−γ)/2
+sin
+[ (2k +1)π
+α1 +α+γθ
+]
+×cos
+[2mπ
+γ
+(
+θ−α1 +α
+2
+)]
+dθ (77)
+REFERENCES
+[1] K. Lee, H. G. Choi, and J. I. Ha, “Power capability improvement of
+interior permanent magnet synchronous motor drives using capacitive
+network,” IEEE Trans. Ind. Electron. , vol. 67, no. 12, pp. 10109–10120,
+Dec. 2020.
+[2] K. D. Hoang, P . Lazari, K. Atallah, J. G. Birchall, and S. D. Calverley,
+“Evaluation of simpliﬁed model for rapid identiﬁcation and control devel-
+opment of IPM traction machines,” IEEE Trans. Transp. Electriﬁc.,v o l .7 ,
+no. 2, pp. 779–792, Jun. 2021.
+[3] Y . H. Hu, S. S. Zhu, C. Liu, and K. Wang, “Electromagnetic performance
+analysis of interior PM machines for electric vehicle applications,” IEEE
+Trans. Energy Convers., vol. 33, no. 1, pp. 199–208, Mar. 2018.
+[4] P . Akiki et al. , “Multiphysics design of a V -shape IPM motors,” IEEE
+Trans. Energy Convers., vol. 33, no. 3, pp. 1141–1153, Sep. 2018.
+[5] W. M. Tong, S. Q. Li, X. L. Pan, S. N. Wu, and R. Y . Tang, “Analyti-
+cal model for cogging torque calculation in surface-mounted permanent
+magnet motors with rotor eccentricity and magnet defects,” IEEE Trans.
+Energy Convers., vol. 35, no. 4, pp. 2191–2200, Dec. 2020.
+[6] B. C. Guo, Y . K. Huang, F. Peng, and J. N. Dong, “A new hybrid
+method for magnetic ﬁeld calculation in IPMSM accounting for any rotor
+conﬁguration,” IEEE Trans. Ind. Electron., vol. 66, no. 7, pp. 5015–5024,
+Jul. 2019.
+[7] Z. Q. Zhu, D. Howe, E. Bolte, and B. Ackermann, “Instantaneous magnetic
+ﬁeld distribution in brushless permanent magnet DC motors, part I: Open-
+circuit ﬁeld,” IEEE Trans. Magn., vol. 29, no. 1, pp. 124–135, Jan. 1993.
+[8] Z. Q. Zhu and D. Howe, “Instantaneous magnetic ﬁeld distribution in
+brushless permanent magnet DC motors, part II: Armature-reaction ﬁeld,”
+IEEE Trans. Magn., vol. 29, no. 1, pp. 136–142, Jan. 1993.
+[9] A. Hemeida and P . Sergeant, “Analytical modeling of surface PMSM using
+a combined solution of Maxwell’s equations and magnetic equivalent
+circuit,” IEEE Trans. Magn., vol. 50, no. 12, Dec. 2014, Art. no. 7027913.
+[10] Z. Zhang, C. L. Xia, H. M. Wang, and T. N. Shi, “Analytical ﬁeld
+calculation and analysis of surface inset permanent magnet machines
+with high saliency ratio,” IEEE Trans. Magn., vol. 52, no. 12, Dec. 2016,
+Art. no. 8108612.
+[11] L. Xu, C. Zhang, X. Y . Zhu, M. Y . Lin, and S. Y . Zhang, “Indirect analytical
+modeling and analysis of V -shaped interior PM synchronous machine,”
+IEEE Access, pp. 173786–173795, Dec. 2019.
+[12] M. Hajdinjak and D. Miljavec, “Analytical calculation of the magnetic ﬁeld
+distribution in slotless brushless machines with U-shaped interior perma-
+nent magnets,” IEEE Trans. Ind. Electron., vol. 67, no. 8, pp. 6721–6731,
+Aug. 2020.
+[13] M. Pourahmadi-Nakhli, A. Rahideh, and M. Mardaneh, “Analytical 2-D
+model of slotted brushless machines with cubic spoke-type permanent
+magnets,” IEEE Trans. Energy Convers. , vol. 33, no. 1, pp. 373–382,
+Mar. 2018.
+[14] Y . Wei et al., “Electromagnetic characteristic of a novel linear ﬂux switch-
+ing machine with three-dimensional magnetic circuit,” IEEE Trans. Appl.
+Supercond., vol. 29, no. 2, Mar. 2019, Art. no. 0600505.
+[15] W. M. Tong, S. Wang, S. H. Dai, S. N. Wu, and R. Y . Tang, “A quasi-
+three-dimensional magnetic equivalent circuit model of a double-sided
+axial ﬂux permanent magnet machine considering local saturation,” IEEE
+Trans. Energy Convers., vol. 33, no. 4, pp. 2163–2173, Dec. 2018.
+[16] D. Caballero, B. Prieto, G. Artetxe, I. Elosegui, and M. Martinez-
+Iturralde, “Node mapping criterion for highly saturated interior PMSMs
+using magnetic reluctance network,” Energies, vol. 11, no. 9, pp. 1–19,
+Aug. 2018.
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. \n===== PAGE 11 =====\nLI et al.: ANALYTICAL MODEL FOR NO-LOAD ELECTROMAGNETIC PERFORMANCE PREDICTION OF V -SHAPE 911
+[17] L. Ding, G. H. Liu, Q. Chen, and G. H. Xu, “A novel mesh-based
+equivalent magnetic network for performance analysis and optimal design
+of permanent magnet machines,” IEEE Trans. Energy Convers. , vol. 34,
+no. 3, pp. 1337–1346, Sep. 2019.
+[18] G. H. Liu, Y . Wang, Q. Chen, G. H. Xu, and D. H. Gao, “Design and
+analysis of a new equivalent magnetic network model for IPM machines,”
+IEEE Trans. Magn., vol. 56, no. 6, Jun. 2020, Art. no. 8101112.
+[19] S. Wu, T. N. Shi, L. Y . Guo, H. M. Wang, and C. L. Xia, “Accurate
+analytical method for magnetic ﬁeld calculation of interior PM motors,”
+IEEE Trans. Energy Convers., vol. 36, no. 1, pp. 325–337, Mar. 2021.
+[20] Z. K. Li et al., “An improved hybrid ﬁeld model for calculating on-load
+performance of interior permanent-magnet motors,” IEEE Trans. Ind.
+Electron., vol. 68, no. 10, pp. 9207–9217, Oct. 2021.
+[21] S. Wu, L. Y . Guo, H. M. Wang, Y . F. Cao, T. N. Shi, and C. L. Xia, “In-
+ductance calculation of interior permanent magnet machines considering
+asymmetrical saturation of the bridge,”IEEE Trans. Magn., vol. 55, no. 11,
+Nov. 2019, Art. no. 8107511.
+[22] M. Farshadnia, M. A. M. Cheema, R. Dutta, and J. E. Fletcher, “An-
+alytical modeling of armature reaction air-gap ﬂux density considering
+the non-homogeneously saturated rotor in a fractional-slot concentrated-
+wound IPM machine,” IEEE Trans. Magn. , vol. 53, no. 2, Feb. 2017,
+Art. no. 8200412.
+[23] P . X. Liang, F. Chai, Y . L. Bi, Y . L. Pei, and S. K. Cheng, “Analytical
+model and design of spoke-type permanent-magnet machines accounting
+for saturation and nonlinearity of magnetic bridges,” J. Magnetism Magn.
+Mater ., vol. 417, pp. 389–396, Jun. 2016.
+[24] P . X. Liang, F. Chai, Y . Li, and Y . L. Pei, “Analytical prediction of magnetic
+ﬁeld distribution in spoke-type permanent-magnet synchronous machines
+accounting for bridge saturation and magnet shape,” IEEE Trans. Ind.
+Electron., vol. 64, no. 5, pp. 3479–3488, May 2017.
+[25] P . X. Liang, F. Chai, L. Chen, and Y . P . Wang, “Analytical prediction of
+no-load stator iron losses in spoke-type permanent-magnet synchronous
+machines,” IEEE Trans. Energy Convers. , vol. 33, no. 1, pp. 252–259,
+Mar. 2018.
+[26] D. Lim et al., “Analysis and design of a multi-layered and multi-segmented
+interior permanent magnet motor by using an analytic method,” IEEE
+Trans. Magn., vol. 50, no. 6, Jun. 2014, Art. no. 8201308.
+[27] D. Zarko, D. Ban, and T. A. Lipo, “Analytical calculation of magnetic ﬁeld
+distribution in the slotted air gap of a surface permanent-magnet motor
+using complex relative air-gap permeance,” IEEE Trans. Magn. , vol. 42,
+no. 7, pp. 1882–1837, Jul. 2006.
+Shiqi Li was born in Qiqihar, China, in 1998. He
+received the B.S. degree in 2018 in electrical engi-
+neering from the Shenyang University of Technol-
+ogy, Shenyang, China, where he is currently working
+toward the Ph.D. degree in electrical engineering. His
+main research interests include the design, modeling,
+and analysis of permanent magnet machines.
+Wenming Tong (Member, IEEE) was born in Dan-
+dong, China, in 1984. He received the B.S. and Ph.D.
+degrees in electrical engineering from the Shenyang
+University of Technology, Shenyang, China, in 2007
+and 2012, respectively. He is currently a Full Pro-
+fessor with the National Engineering Research Cen-
+ter for Rare Earth Permanent Magnet Machines,
+Shenyang University of Technology. His main re-
+search interests include the design, analysis, and con-
+trol of high-speed and low-speed direct-drive perma-
+nent magnet machines, axial ﬂux permanent magnet
+machines, hybrid excitation machines, and high performance machines with new
+types of soft magnetic materials.
+Mingjun Hou was born in Weihai, China, in 1996.
+He received the B.S. degree in electrical engineering
+from Ludong University, Y antai, China, in 2019. He is
+currently working toward the M.S. degree in electrical
+engineering with the Shenyang University of Tech-
+nology, Shenyang, China. His main research interests
+include modeling and analysis of rotor eddy current
+loss of high-speed permanent magnet machines.
+Shengnan Wu(Member, IEEE) was born in Yingkou,
+China, in 1985. She received the B.S., M.S., and Ph.D.
+degrees in electrical engineering from the Shenyang
+University of Technology, Shenyang, China, in 2008,
+2011, and 2017, respectively. She is currently an
+Associate Professor with the School of Electrical En-
+gineering, Shenyang University of Technology. Her
+main research interests include electromagnetic de-
+sign, and multiphysical ﬁeld simulation and analysis
+of permanent magnet machines.
+Renyuan Tangwas born in Shanghai, China, in 1931.
+He received the B.S. degree in electrical engineer-
+ing from Shanghai Jiao Tong University, Shanghai,
+China, in 1952. He is currently an Academician of the
+Chinese Academy of Engineering, a Professor with
+the Shenyang University of Technology, Shenyang,
+China, and the Director of the National Engineering
+Research Center for Rare-Earth Permanent Magnet
+Machines. Since 1978, he has been with the Shenyang
+University of Technology, where his currently main
+research interests include the design, analysis, and
+control of rare-earth permanent magnet machines. He has authored or coauthored
+eight books by his chief editor and translator, and more than 133 technical papers.
+He is recognized as the pioneer and founder of China’s Rare-Earth Permanent
+Magnet Machines.
+Authorized licensed use limited to: KOREA ELECTROTECHNOLOGY RESEARCH INSTITUTE. Downloaded on June 05,2026 at 07:32:44 UTC from IEEE Xplore.  Restrictions apply. 

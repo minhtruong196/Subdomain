@@ -1,0 +1,15 @@
+name,value
+Br_relative_l2,0.10029037769118403
+Bt_relative_l2,0.37134906829294156
+Br_rms,0.4865868483583025
+Bt_rms,0.04189141311865177
+slotted_FEMM_Br_rms,0.5106783515674461
+slotted_FEMM_Bt_rms,0.04904435641138518
+lambda_drop,0.32
+lambda_b_gain,0.14000000000000004
+width_scale,1.0
+notch_kind,gaussian
+normalize_mean,True
+slot_opening_deg,2.8647889756541165
+slot_centers_deg,5;15;25;35;45;55
+model_csv,results/paper5_structure2_alpha52_offset30_h7/structure2_br_bt.csv

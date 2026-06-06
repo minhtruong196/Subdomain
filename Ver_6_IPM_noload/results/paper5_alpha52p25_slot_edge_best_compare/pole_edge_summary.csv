@@ -1,0 +1,2 @@
+edge_width_deg,window_power,edge_bt_gain,edge_params,bt_mode,model_Br_rms,model_Bt_rms,Br_L2_left,Bt_L2_left,Br_L2_middle,Bt_L2_middle,Br_L2_right,Bt_L2_right,Br_L2_edge,Bt_L2_edge,Br_L2_all,Bt_L2_all,field_csv
+11.5,1.0,0.08,manual,drive,0.48202498869312366,0.04900733491500949,0.18171414952755408,0.2818916856483509,0.06411058509300809,0.15821274341870187,0.18388975119355883,0.28213407113731054,0.18280738793245033,0.2820133194925467,0.09289136903055085,0.223445153566082,results\paper5_alpha52p25_slot_edge_best_compare\pole_edge_corrected_br_bt.csv

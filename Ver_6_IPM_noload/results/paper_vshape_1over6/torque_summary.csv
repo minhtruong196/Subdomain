@@ -1,0 +1,17 @@
+name,value
+fem,paper_ipm_vshape_1over6.FEM
+current_rms_a,0
+current_angle_deg,0.0
+Ia_A,0.0
+Ib_A,-0.0
+Ic_A,0.0
+torque_group,1
+periodic_multiplier,6
+torque_one_sector_Nm,0.001193576638205041
+torque_total_Nm,0.0071614598292302455
+airgap_radius_mm,39.4
+arc_start_deg,0.0
+arc_end_deg,60.0
+arc_sample_margin_deg,0.01
+num_field_points,301
+export_br_bt,True

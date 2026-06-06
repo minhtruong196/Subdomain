@@ -1,0 +1,6 @@
+case,field_csv,best_abs_angle_deg,best_abs_torque_total_Nm,best_positive_angle_deg,best_positive_torque_total_Nm,best_negative_angle_deg,best_negative_torque_total_Nm
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,167.5,14.695133721553109,167.5,14.695133721553109,120.0,10.020191827407134
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,167.5,14.274457670610428,167.5,14.274457670610428,120.0,9.735227804289721
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,167.5,14.567644139392929,167.5,14.567644139392929,120.0,9.910094903296944
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,167.5,13.370917123745487,167.5,13.370917123745487,120.0,9.08994915465728
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,167.5,14.062514081910557,167.5,14.062514081910557,120.0,9.558966240084182

@@ -1,0 +1,28 @@
+name,value
+source_audit,paper5_source_audit.md
+mu_bridge,16.831
+mu_bridge_source,CLI/user input; default 1.0 is a placeholder
+brem_t,1.26
+brem_t_source,build_paper_vshape_model.py PAPER_SPECS['vshape'].magnet_remanence_t unless overridden
+model_Br_min,9.201372429719285e-05
+model_Br_max,0.22125338237017328
+model_Br_mean,0.16212772925871688
+model_Br_rms,0.17566701156446046
+model_Bt_min,-0.02007479218534838
+model_Bt_max,0.020074792185348373
+model_Bt_mean,2.213069152076724e-18
+model_Bt_rms,0.009375771619611312
+femm_Br_min,4.9341242015218684e-05
+femm_Br_max,0.6272661049020922
+femm_Br_mean,0.46727059144078725
+femm_Br_rms,0.5228216083135656
+femm_Bt_min,-0.08124424582377504
+femm_Bt_max,0.08114499821865068
+femm_Bt_mean,6.505491991434844e-05
+femm_Bt_rms,0.031694979912558735
+Br_relative_l2,0.6670511829477414
+Bt_relative_l2,0.7684534350886094
+Br_best_scalar_to_FEMM,2.958233007235956
+Bt_best_scalar_to_FEMM,2.83974699102269
+Br_relative_l2_after_best_scalar,0.10973974129539679
+Bt_relative_l2_after_best_scalar,0.5425357861085979

@@ -1,0 +1,20 @@
+name,value
+fem,paper_ipm_vshape_equivalent_shift_2p7.FEM
+use_existing_solution,False
+current_rms_a,0.0
+current_angle_deg,0.0
+Ia_A,0.0
+Ib_A,-0.0
+Ic_A,0.0
+airgap_radius_mm,39.4
+arc_start_deg,0.0
+arc_end_deg,60.0
+arc_sample_margin_deg,0.01
+num_field_points,301
+torque_groups,"6,7,8,9,10,11"
+periodic_multiplier,6
+torque_one_sector_Nm,0.001693918934241583
+torque_total_Nm,0.010163513605449499
+br_png,D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\results\paper5_radial_shift_validation_gap_p1\shift_2p7\femm_equivalent\br_arc.png
+bt_png,D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\results\paper5_radial_shift_validation_gap_p1\shift_2p7\femm_equivalent\bt_arc.png
+br_bt_csv,D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\results\paper5_radial_shift_validation_gap_p1\shift_2p7\femm_equivalent\br_bt_arc.csv

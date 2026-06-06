@@ -1,0 +1,12 @@
+name,value
+fem,paper_ipm_vshape_1over6.FEM
+current_rms_a,17.6
+periodic_multiplier,6
+torque_groups,1
+num_angles,13
+best_abs_angle_deg,145.0
+best_abs_torque_total_Nm,-15.974079214402357
+best_positive_angle_deg,165.0
+best_positive_torque_total_Nm,-14.787203876547203
+best_negative_angle_deg,145.0
+best_negative_torque_total_Nm,-15.974079214402357

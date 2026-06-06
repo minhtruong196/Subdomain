@@ -1,0 +1,2 @@
+edge_width_deg,window_power,edge_bt_gain,edge_params,bt_mode,model_Br_rms,model_Bt_rms,Br_L2_left,Bt_L2_left,Br_L2_middle,Bt_L2_middle,Br_L2_right,Bt_L2_right,Br_L2_edge,Bt_L2_edge,Br_L2_all,Bt_L2_all,field_csv
+12.0,1.0,0.05,closed-form,drive,0.5220211928392419,0.045689514698011933,0.054782792772027834,0.4916649335190938,0.04323153001923717,0.39734187797902526,0.05860265720510746,0.49079184023255235,0.056728750146027664,0.491227085771032,0.045573861813589335,0.4427070925356522,results\paper5_pole_edge_drive_sweep\pole_edge_corrected_br_bt.csv

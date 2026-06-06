@@ -1,0 +1,106 @@
+case,field_csv,current_angle_deg,current_rms_a,torque_sector_Nm,torque_total_Nm
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,120.0,17.6,1.6700319712345222,10.020191827407134
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,122.5,17.6,1.7465924816397056,10.479554889838234
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,125.0,17.6,1.8198282539862607,10.918969523917564
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,127.5,17.6,1.8895998798190758,11.337599278914455
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,130.0,17.6,1.9557745448828192,11.734647269296914
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,132.5,17.6,2.0182262819414203,12.109357691648523
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,135.0,17.6,2.076836210563863,12.461017263383177
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,137.5,17.6,2.131492763419842,12.788956580519052
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,140.0,17.6,2.182091898654524,13.092551391927143
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,142.5,17.6,2.2285372979381206,13.371223787628724
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,145.0,17.6,2.2707405498133126,13.624443298879875
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,147.5,17.6,2.3086213179914785,13.85172790794887
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,150.0,17.6,2.34210749427739,14.05264496566434
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,152.5,17.6,2.3711353358312564,14.226812014987537
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,155.0,17.6,2.3956495865068455,14.373897519041073
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,157.5,17.6,2.415603582034698,14.493621492208188
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,160.0,17.6,2.4309593388502146,14.585756033101287
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,162.5,17.6,2.441687626397534,14.650125758385203
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,165.0,17.6,2.4477680227715517,14.68660813662931
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,167.5,17.6,2.4491889535921847,14.695133721553109
+FEMM base no-load Br,results/paper_vshape_1over6/br_bt_arc.csv,170.0,17.6,2.445947714036856,14.675686284221136
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,120.0,17.6,1.6225379673816203,9.735227804289721
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,122.5,17.6,1.6968939458275012,10.181363674965008
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,125.0,17.6,1.7680197902023518,10.60811874121411
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,127.5,17.6,1.8357801084188756,11.014680650513254
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,130.0,17.6,1.9000459148601043,11.400275489160625
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,132.5,17.6,1.9606948759108467,11.764169255465081
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,135.0,17.6,2.0176115428266805,12.105669256960084
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,137.5,17.6,2.0706875714972006,12.424125428983203
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,140.0,17.6,2.119821928685188,12.718931572111128
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,142.5,17.6,2.1649210843491207,12.989526506094723
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,145.0,17.6,2.2058991896829245,13.235395138097548
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,147.5,17.6,2.242678240534053,13.456069443204317
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,150.0,17.6,2.275188225888826,13.651129355332955
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,152.5,17.6,2.3033672611423746,13.820203566854246
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,155.0,17.6,2.3271617058995018,13.96297023539701
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,157.5,17.6,2.3465262660822246,14.079157596493348
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,160.0,17.6,2.3614240801496256,14.168544480897754
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,162.5,17.6,2.371826789265891,14.230960735595346
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,165.0,17.6,2.3777145912829662,14.266287547697797
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,167.5,17.6,2.3790762784350714,14.274457670610428
+FEMM equivalent no-load Br,results/paper_vshape_equivalent_1over6/br_bt_arc.csv,170.0,17.6,2.375909258673321,14.255455552039926
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,120.0,17.6,1.651682483882824,9.910094903296944
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,122.5,17.6,1.7277367777024168,10.366420666214502
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,125.0,17.6,1.8005022263675146,10.803013358205087
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,127.5,17.6,1.869840316710864,11.219041900265184
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,130.0,17.6,1.935619059736579,11.613714358419474
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,132.5,17.6,1.9977132418686891,11.986279451212134
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,135.0,17.6,2.056004663302305,12.336027979813828
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,137.5,17.6,2.1103823630036582,12.662294178021948
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,140.0,17.6,2.1607428299307423,12.964456979584455
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,142.5,17.6,2.2069902000724584,13.24194120043475
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,145.0,17.6,2.2490364389312143,13.494218633587286
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,147.5,17.6,2.2868015091015894,13.720809054609536
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,150.0,17.6,2.3202135226260885,13.92128113575653
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,152.5,17.6,2.3492088778379534,14.09525326702772
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,155.0,17.6,2.3737323804305492,14.242394282583295
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,157.5,17.6,2.3937373485228677,14.362424091137207
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,160.0,17.6,2.409185701521135,14.455114209126808
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,162.5,17.6,2.4200480326073928,14.520288195644357
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,165.0,17.6,2.4263036647170444,14.557821988302265
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,167.5,17.6,2.4279406898988216,14.567644139392929
+Br-best analytical,results/paper5_analytical_only_pole_edge_drive_closed_form_compare/pole_edge_corrected_br_bt.csv,170.0,17.6,2.4249559919822494,14.549735951893496
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,120.0,17.6,1.5149915257762132,9.08994915465728
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,122.5,17.6,1.5848391442678795,9.509034865607276
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,125.0,17.6,1.651669931372063,9.910019588232378
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,127.5,17.6,1.7153566708870969,10.292140025322581
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,130.0,17.6,1.775778131484598,10.654668788907587
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,132.5,17.6,1.8328192974801871,10.996915784881123
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,135.0,17.6,1.8863715877723841,11.318229526634305
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,137.5,17.6,1.9363330625329034,11.61799837519742
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,140.0,17.6,1.9826086172549153,11.895651703529492
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,142.5,17.6,2.0251101637898747,12.150660982739248
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,145.0,17.6,2.063756798028323,12.382540788169939
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,147.5,17.6,2.098474953905456,12.590849723432736
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,150.0,17.6,2.12919854343831,12.77519126062986
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,152.5,17.6,2.1558690825279947,12.935214495167969
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,155.0,17.6,2.1784358022875,13.070614813725
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,157.5,17.6,2.1968557456831537,13.181134474098922
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,160.0,17.6,2.2110938493057812,13.266563095834687
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,162.5,17.6,2.221123010115896,13.326738060695376
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,165.0,17.6,2.2269241370358763,13.361544822215258
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,167.5,17.6,2.2284861872909145,13.370917123745487
+balanced analytical,results/paper5_alpha52p25_slot_edge_best_compare/pole_edge_corrected_br_bt.csv,170.0,17.6,2.2258061874295705,13.354837124577422
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,120.0,17.6,1.5931610400140301,9.558966240084182
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,122.5,17.6,1.6666293063395015,9.999775838037008
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,125.0,17.6,1.7369250490553374,10.421550294332025
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,127.5,17.6,1.8039144562199296,10.823486737319577
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,130.0,17.6,1.867470009689313,11.204820058135878
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,132.5,17.6,1.9274707278551955,11.564824367131173
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,135.0,17.6,1.983802395940331,11.902814375641986
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,137.5,17.6,2.0363577834128375,12.218146700477025
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,140.0,17.6,2.0850368481056067,12.51022108863364
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,142.5,17.6,2.1297469266522597,12.778481559913558
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,145.0,17.6,2.1704029108771277,13.022417465262766
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,147.5,17.6,2.2069274098035043,13.241564458821026
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,150.0,17.6,2.239250896971765,13.435505381830591
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,152.5,17.6,2.26731184278694,13.60387105672164
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,155.0,17.6,2.2910568316437887,13.746340989862732
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,157.5,17.6,2.3104406636064456,13.862643981638673
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,160.0,17.6,2.3254264404490645,13.952558642694388
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,162.5,17.6,2.335985635893691,14.015913815362147
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,165.0,17.6,2.3420981499116484,14.05258889946989
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,167.5,17.6,2.343752346985093,14.062514081910557
+S1 diagnostic analytical,results/paper5_structure1_integration_alpha52p25_h5/best_with_s1.csv,170.0,17.6,2.3409450782558765,14.04567046953526

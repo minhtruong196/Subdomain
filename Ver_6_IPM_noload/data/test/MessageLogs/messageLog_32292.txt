@@ -1,0 +1,143 @@
+02/06/2026 3:31:34 PM : Created file: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\MessageLogs\messageLog_32292.txt
+02/06/2026 3:31:34 PM : Loaded file: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test.mot
+02/06/2026 3:35:52 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\
+02/06/2026 3:35:52 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+02/06/2026 3:35:53 PM : Status: Solving FEA model
+02/06/2026 3:35:53 PM : Q axis current only Point Calculation
+02/06/2026 3:35:53 PM : Solving FEA model
+02/06/2026 3:35:53 PM : Load Point Calculation
+02/06/2026 3:35:53 PM : Solving FEA model
+02/06/2026 3:35:54 PM : Solving FEA model
+02/06/2026 3:35:54 PM : Transient Torque Calculation
+02/06/2026 3:35:54 PM : Solving FEA model
+02/06/2026 3:36:01 PM : FEA Calculation Time: 8 Seconds
+02/06/2026 3:36:01 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+02/06/2026 3:36:01 PM : Warning: Operating point outside voltage limit. Check the DC bus voltage.
+02/06/2026 3:36:01 PM : Solving completed
+02/06/2026 3:36:01 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\Emag\
+02/06/2026 3:36:01 PM : Status: Solving Completed
+02/06/2026 4:15:42 PM : Status: Solving FEA model
+02/06/2026 4:15:42 PM : Q axis current only Point Calculation
+02/06/2026 4:15:42 PM : Solving FEA model
+02/06/2026 4:15:43 PM : Load Point Calculation
+02/06/2026 4:15:43 PM : Solving FEA model
+02/06/2026 4:15:43 PM : Solving FEA model
+02/06/2026 4:15:43 PM : Transient Torque Calculation
+02/06/2026 4:15:43 PM : Solving FEA model
+02/06/2026 4:15:52 PM : FEA Calculation Time: 9 Seconds
+02/06/2026 4:15:52 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+02/06/2026 4:15:52 PM : Warning: Operating point outside voltage limit. Check the DC bus voltage.
+02/06/2026 4:15:52 PM : Solving completed
+02/06/2026 4:15:52 PM : Status: Solving Completed
+02/06/2026 4:16:13 PM : Status: Solving FEA model
+02/06/2026 4:16:13 PM : Q axis current only Point Calculation
+02/06/2026 4:16:13 PM : Solving FEA model
+02/06/2026 4:16:13 PM : Load Point Calculation
+02/06/2026 4:16:13 PM : Solving FEA model
+02/06/2026 4:16:14 PM : Solving FEA model
+02/06/2026 4:16:14 PM : Transient Torque Calculation
+02/06/2026 4:16:14 PM : Solving FEA model
+02/06/2026 4:16:20 PM : FEA Calculation Time: 7 Seconds
+02/06/2026 4:16:20 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+02/06/2026 4:16:20 PM : Solving completed
+02/06/2026 4:16:20 PM : Status: Solving Completed
+02/06/2026 4:32:48 PM : Exported dxf geometry to file D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test.dxf
+02/06/2026 4:34:22 PM : Exported dxf geometry to file D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test.dxf
+02/06/2026 4:35:30 PM : Exported dxf geometry to file D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test.dxf
+02/06/2026 4:40:11 PM : Status: Solving FEA model
+02/06/2026 4:40:11 PM : Q axis current only Point Calculation
+02/06/2026 4:40:11 PM : Solving FEA model
+02/06/2026 4:40:12 PM : Load Point Calculation
+02/06/2026 4:40:12 PM : Solving FEA model
+02/06/2026 4:40:12 PM : Solving FEA model
+02/06/2026 4:40:12 PM : Transient Torque Calculation
+02/06/2026 4:40:12 PM : Solving FEA model
+02/06/2026 4:40:18 PM : FEA Calculation Time: 7 Seconds
+02/06/2026 4:40:18 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+02/06/2026 4:40:18 PM : Solving completed
+02/06/2026 4:40:18 PM : Status: Solving Completed
+02/06/2026 4:43:38 PM : Status: Solving FEA model
+02/06/2026 4:43:38 PM : Q axis current only Point Calculation
+02/06/2026 4:43:38 PM : Solving FEA model
+02/06/2026 4:43:39 PM : Load Point Calculation
+02/06/2026 4:43:39 PM : Solving FEA model
+02/06/2026 4:43:39 PM : Solving FEA model
+02/06/2026 4:43:39 PM : Transient Torque Calculation
+02/06/2026 4:43:39 PM : Solving FEA model
+02/06/2026 4:43:45 PM : FEA Calculation Time: 7 Seconds
+02/06/2026 4:43:45 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+02/06/2026 4:43:45 PM : Solving completed
+02/06/2026 4:43:46 PM : Status: Solving Completed
+02/06/2026 5:17:04 PM : Status: Solving FEA model
+02/06/2026 5:17:04 PM : Q axis current only Point Calculation
+02/06/2026 5:17:04 PM : Solving FEA model
+02/06/2026 5:17:05 PM : Load Point Calculation
+02/06/2026 5:17:05 PM : Solving FEA model
+02/06/2026 5:17:05 PM : Solving FEA model
+02/06/2026 5:17:06 PM : Solving FEA model
+02/06/2026 5:17:06 PM : Transient Torque Calculation
+02/06/2026 5:17:06 PM : Solving FEA model
+02/06/2026 5:17:12 PM : FEA Calculation Time: 7 Seconds
+02/06/2026 5:17:12 PM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+02/06/2026 5:17:12 PM : Solving completed
+02/06/2026 5:17:12 PM : Status: Solving Completed
+03/06/2026 12:15:48 AM : Status: Solving FEA model
+03/06/2026 12:15:49 AM : Q axis current only Point Calculation
+03/06/2026 12:15:49 AM : Solving FEA model
+03/06/2026 12:15:49 AM : Load Point Calculation
+03/06/2026 12:15:49 AM : Solving FEA model
+03/06/2026 12:15:50 AM : Solving FEA model
+03/06/2026 12:15:50 AM : Transient Torque Calculation
+03/06/2026 12:15:50 AM : Solving FEA model
+03/06/2026 12:15:57 AM : FEA Calculation Time: 8 Seconds
+03/06/2026 12:15:57 AM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+03/06/2026 12:15:57 AM : Solving completed
+03/06/2026 12:15:57 AM : Status: Solving Completed
+03/06/2026 12:21:07 AM : Status: Solving FEA model
+03/06/2026 12:21:07 AM : Q axis current only Point Calculation
+03/06/2026 12:21:07 AM : Solving FEA model
+03/06/2026 12:21:08 AM : Load Point Calculation
+03/06/2026 12:21:08 AM : Solving FEA model
+03/06/2026 12:21:08 AM : Solving FEA model
+03/06/2026 12:21:09 AM : Transient Torque Calculation
+03/06/2026 12:21:09 AM : Solving FEA model
+03/06/2026 12:21:14 AM : FEA Calculation Time: 7 Seconds
+03/06/2026 12:21:14 AM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+03/06/2026 12:21:15 AM : Solving completed
+03/06/2026 12:21:15 AM : Status: Solving Completed
+03/06/2026 2:19:35 AM : Status: Solving FEA model
+03/06/2026 2:19:35 AM : Q axis current only Point Calculation
+03/06/2026 2:19:36 AM : Solving FEA model
+03/06/2026 2:19:36 AM : Load Point Calculation
+03/06/2026 2:19:36 AM : Solving FEA model
+03/06/2026 2:19:36 AM : Solving FEA model
+03/06/2026 2:19:37 AM : Transient Torque Calculation
+03/06/2026 2:19:37 AM : Solving FEA model
+03/06/2026 2:19:44 AM : FEA Calculation Time: 8 Seconds
+03/06/2026 2:19:44 AM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+03/06/2026 2:19:44 AM : Solving completed
+03/06/2026 2:19:44 AM : Status: Solving Completed
+03/06/2026 2:20:06 AM : Status: Solving FEA model
+03/06/2026 2:20:06 AM : Q axis current only Point Calculation
+03/06/2026 2:20:06 AM : Solving FEA model
+03/06/2026 2:20:07 AM : Load Point Calculation
+03/06/2026 2:20:07 AM : Solving FEA model
+03/06/2026 2:20:07 AM : Solving FEA model
+03/06/2026 2:20:07 AM : Transient Torque Calculation
+03/06/2026 2:20:07 AM : Solving FEA model
+03/06/2026 2:20:14 AM : FEA Calculation Time: 8 Seconds
+03/06/2026 2:20:14 AM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+03/06/2026 2:20:14 AM : Solving completed
+03/06/2026 2:20:15 AM : Status: Solving Completed
+03/06/2026 2:20:28 AM : Status: Solving FEA model
+03/06/2026 2:20:28 AM : Q axis current only Point Calculation
+03/06/2026 2:20:28 AM : Solving FEA model
+03/06/2026 2:20:29 AM : Load Point Calculation
+03/06/2026 2:20:29 AM : Solving FEA model
+03/06/2026 2:20:29 AM : Solving FEA model
+03/06/2026 2:20:30 AM : Transient Torque Calculation
+03/06/2026 2:20:30 AM : Solving FEA model
+03/06/2026 2:20:37 AM : FEA Calculation Time: 8 Seconds
+03/06/2026 2:20:37 AM : Creating folder: D:\Minh Tuan\Projects\FEMM\2026\subdomain\IPM\test\FEResultsData\feasys\
+03/06/2026 2:20:37 AM : Solving completed
+03/06/2026 2:20:37 AM : Status: Solving Completed
